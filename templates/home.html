@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row bg-title">
+    <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
+        <h4 class="page-title">BIENVENIDO {{ user.username }}</h4></div>
+
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<!-- ============================================================== -->
+<!-- Different data widgets -->
+<!-- ============================================================== -->
+<!-- .row -->
+
+<!--/.row -->
+<!--row -->
+<!-- /.row -->
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+        <div class="white-box">
+            <h3 class="box-title">Cómo quieres ver la información?</h3>
+
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab1">Por perfil de usuario </a></li>
+                <li><a data-toggle="tab" href="#tab2">Por totalidad de los usuarios</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div id="tab1" class="tab-pane fade in active">
+
+                    <script type='text/javascript' src='http://88.208.3.175:8051/javascripts/api/viz_v1.js'></script>
+                    <div class='tableauPlaceholder' style='width: 100%; height: 539px;'>
+                        <object class='tableauViz' width='100%' height='539' style='display:none;'>
+                            <param name='host_url' value='http%3A%2F%2F88.208.3.175%3A8051%2F'/>
+                            <param name='embed_code_version' value='3'/>
+                            <param name='site_root' value=''/>
+                            <param name='name' value='Comercialdemo&#47;NubedepalabrasLlamadas'/>
+                            <param name='tabs' value='no'/>
+                            <param name='toolbar' value='yes'/>
+                            <param name='showAppBanner' value='false'/>
+                            <param name='username' value='tableauCustom'/>
+
+                            <param name='filter' value='iframeSizedToWindow=true'/>
+                        </object>
+                    </div>
+
+
+                    <script type='text/javascript' src='http://88.208.3.175:8051/javascripts/api/viz_v1.js'></script>
+                    <div class='tableauPlaceholder' style='width: 100%; height: 539px;'>
+                        <object class='tableauViz' width='100%' height='539' style='display:none;'>
+                            <param name='host_url' value='http%3A%2F%2F88.208.3.175%3A8051%2F'/>
+                            <param name='embed_code_version' value='3'/>
+                            <param name='site_root' value=''/>
+                            <param name='name' value='Comercialdemo&#47;Listadodellamadas'/>
+                            <param name='tabs' value='no'/>
+                            <param name='toolbar' value='yes'/>
+                            <param name='showAppBanner' value='false'/>
+                            <param name='filter' value='iframeSizedToWindow=true'/>
+                        </object>
+                    </div>
+
+
+                    <script type='text/javascript' src='http://88.208.3.175:8051/javascripts/api/viz_v1.js'></script>
+                    <div class='tableauPlaceholder' style='width: 100%px; height: 539px;'>
+                        <object class='tableauViz' width='100%' height='539' style='display:none;'>
+                            <param name='host_url' value='http%3A%2F%2F88.208.3.175%3A8051%2F'/>
+                            <param name='embed_code_version' value='3'/>
+                            <param name='site_root' value=''/>
+                            <param name='name' value='Comercialdemo&#47;Listadodeexperiencias'/>
+                            <param name='tabs' value='no'/>
+                            <param name='toolbar' value='yes'/>
+                            <param name='showAppBanner' value='false'/>
+                            <param name='filter' value='iframeSizedToWindow=true'/>
+                        </object>
+                    </div>
+                </div>
+                <div id="tab2" class="tab-pane fade">
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <script type='text/javascript'
+                                    src='http://88.208.3.175:8051/javascripts/api/viz_v1.js'></script>
+                            <div class='tableauPlaceholder' style='width: 100%; height: 539px;'>
+                                <object class='tableauViz' width='100%' height='539' style='display:none;'>
+                                    <param name='host_url' value='http%3A%2F%2F88.208.3.175%3A8051%2F'/>
+                                    <param name='embed_code_version' value='3'/>
+                                    <param name='site_root' value=''/>
+                                    <param name='name' value='Comercialdemo&#47;Estadisticasllamadasporstatus'/>
+                                    <param name='tabs' value='no'/>
+                                    <param name='toolbar' value='yes'/>
+                                    <param name='showAppBanner' value='false'/>
+                                    <param name='filter' value='iframeSizedToWindow=true'/>
+                                </object>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <script type='text/javascript'
+                                    src='http://88.208.3.175:8051/javascripts/api/viz_v1.js'></script>
+                            <div class='tableauPlaceholder' style='width: 100%; height: 539px;'>
+                                <object class='tableauViz' width='100%' height='539' style='display:none;'>
+                                    <param name='host_url' value='http%3A%2F%2F88.208.3.175%3A8051%2F'/>
+                                    <param name='embed_code_version' value='3'/>
+                                    <param name='site_root' value=''/>
+                                    <param name='name' value='Comercialdemo&#47;Duracionpromediodellamada'/>
+                                    <param name='tabs' value='no'/>
+                                    <param name='toolbar' value='yes'/>
+                                    <param name='showAppBanner' value='false'/>
+                                    <param name='filter' value='iframeSizedToWindow=true'/>
+                                </object>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- table -->
+    <!-- ============================================================== -->
+
+
+    {% endblock %}
+
