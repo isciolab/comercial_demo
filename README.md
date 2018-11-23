@@ -15,7 +15,7 @@ Example created for the blog post [How to Use Django's Built-in Login System][bl
 
 ### 3. Create a user:
 
-    python manage.py createsuperuser
+    python manage.py cQ                                             N  reatesuperuser
 
 ### 4. Run the server:
 
