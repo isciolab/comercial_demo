@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^logout/$', auth_views.LogoutView.as_view(template_name='logged_out.html'), name='logout'),
     url(r'^admin/', admin.site.urls),
     url(r'^experience/register', views.RegisterExperience),
-    url(r'^home', views.home, name="home"),
+
     url(r'^custom_login', views.custom_login)
 
 ]
