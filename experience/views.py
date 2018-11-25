@@ -23,9 +23,9 @@ from django.conf import settings
 
 from .serializers import ExperienceSerializer, UserSerializer, UserDetailSerializer
 from .models import Experience, UserDetail
-import numpy as np
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+#import numpy as np
+#import matplotlib.pyplot as plt
+#from wordcloud import WordCloud
 
 # Imports the Google Cloud client library
 from google.cloud import speech
@@ -37,23 +37,7 @@ import json
 
 # Create your views here.
 
-def home(request):
-    text = "square"
 
-    x, y = np.ogrid[:300, :300]
-
-    mask = (x - 150) ** 2 + (y - 150) ** 2 > 130 ** 2
-    mask = 255 * mask.astype(int)
-
-    wc = WordCloud(background_color="white", repeat=True, mask=mask)
-    wc.generate(text)
-
-    plt.axis("off")
-    plt.imshow(wc, interpolation="bilinear")
-    plt.show()
-
-    html = "<html><body>It is now %s.</body></html>"
-    return HttpResponse(html)
 
 
 

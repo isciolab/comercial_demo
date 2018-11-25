@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class Experience(models.Model):
 
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.CharField(max_length=255)
     cliente = models.CharField(max_length=255)
     lugar = models.CharField(max_length=255)
     pediste_info = models.BooleanField()

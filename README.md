@@ -9,6 +9,38 @@ Example created for the blog post [How to Use Django's Built-in Login System][bl
 
     git clone https://github.com/sibtc/simple-django-login.git
 
+##
+pip install django-cors-headers
+
+##
+pip install --upgrade pip
+
+##
+pip install mysql-python
+
+##
+pip install --upgrade setuptools
+
+##
+pip install mysql-connector-python
+
+##
+pip install mysqlclient
+
+##
+pip install -U numpy
+
+##
+pip install matplotlib
+
+##
+pip install wordcloud
+
+
+##si aparece el siguiente error al ejecutar: pip install mysql-python connector
+ mysql-python install error: Cannot open include file 'config-win.h'
+
+
 ### 2. Run migrations:
 
     python manage.py migrate
