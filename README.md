@@ -47,7 +47,7 @@ pip install wordcloud
 
 ### 3. Create a user:
 
-    python manage.py createsuperuser
+    python manage.py cQ                                             N  reatesuperuser
 
 ### 4. Run the server:
 
