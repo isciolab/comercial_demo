@@ -13,21 +13,6 @@ Example created for the blog post [How to Use Django's Built-in Login System][bl
 pip install django-cors-headers
 
 ##
-pip install --upgrade pip
-
-##
-pip install mysql-python
-
-##
-pip install --upgrade setuptools
-
-##
-pip install mysql-connector-python
-
-##
-pip install mysqlclient
-
-##
 pip install -U numpy
 
 ##
@@ -47,7 +32,7 @@ pip install wordcloud
 
 ### 3. Create a user:
 
-    python manage.py cQ                                             N  reatesuperuser
+    python manage.py createsuperuser
 
 ### 4. Run the server:
 
