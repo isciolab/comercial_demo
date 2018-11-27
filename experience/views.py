@@ -37,14 +37,10 @@ import json
 
 # Create your views here.
 
-
-
-
-
 @api_view(["POST"])
 def RegisterExperience(request):
     try:
-        user_id = request.data.get('user_id')
+        user = request.data.get('user')
         cliente = request.data.get('cliente')
         lugar = request.data.get('lugar')
         pediste_info = request.data.get('pediste_info')
@@ -63,7 +59,7 @@ def RegisterExperience(request):
             handle_uploaded_file(uploaded_file2)
             text2 = convert_voice_to_text(uploaded_file2)
 
-        experience = Experience(user_id=user_id, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
+        experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
                                 flag_converted=0, conversion_audio1=text1, conversion_audio2=text2)
         experience.save()
 
@@ -79,7 +75,7 @@ def RegisterExperience(request):
 def convert_voice_to_text(f):
     print('convirtiendo audio')
     # Instantiates a client
-    file_name = "/home/asterisk/uploads/audios/" + f.name
+    file_name = "/home/ciudatos/pythonapp/uploads/audios/" + f.name
     client = speech.SpeechClient()
 
     # The name of the audio file to transcribe
@@ -109,7 +105,7 @@ def convert_voice_to_text(f):
 
 def handle_uploaded_file(f):
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
-    file_path = "/home/asterisk/uploads/audios/"
+    file_path = "/home/ciudatos/pythonapp/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
