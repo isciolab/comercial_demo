@@ -40,7 +40,7 @@ import json
 @api_view(["POST"])
 def RegisterExperience(request):
     try:
-        user = request.data.get('user')
+        user = request.data.get('user', '')
         cliente = request.data.get('cliente')
         lugar = request.data.get('lugar')
         pediste_info = request.data.get('pediste_info')
