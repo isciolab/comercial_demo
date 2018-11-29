@@ -103,8 +103,8 @@ def convert_voice_to_text(f):
         #for result in response.results:
         #print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-    except Exception, e:
-            return ""
+    except Exception:
+        return ""
 
 
 def handle_uploaded_file(f):
