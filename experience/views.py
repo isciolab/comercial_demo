@@ -74,34 +74,37 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-    print('convirtiendo audio')
-    # Instantiates a client
-    file_name = "/home/ciudatos/uploads/audios/" + f.name
-    client = speech.SpeechClient()
+    try:
+        print('convirtiendo audio')
+        # Instantiates a client
+        file_name = "/home/ciudatos/uploads/audios/" + f.name
+        client = speech.SpeechClient()
 
-    # The name of the audio file to transcribe
-    file_name = file_name
+        # The name of the audio file to transcribe
+        file_name = file_name
 
-    print(file_name)
-    # Loads the audio into memory
-    with io.open(file_name, 'rb') as audio_file:
-        content = audio_file.read()
+        print(file_name)
+        # Loads the audio into memory
+        with io.open(file_name, 'rb') as audio_file:
+            content = audio_file.read()
 
-    audio = types.RecognitionAudio(content=content)
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        audio = types.RecognitionAudio(content=content)
+        config = types.RecognitionConfig(
+           # encoding=enums.RecognitionConfig.AudioEncoding.AMR_NB,
 
-        language_code='es-ES')
+            language_code='es-ES')
 
-    # Detects speech in the audio file
-    response = client.recognize(config, audio)
+        # Detects speech in the audio file
+        response = client.recognize(config, audio)
 
-    text = format(response.results[0].alternatives[0].transcript)
-    print(text)
+        text = format(response.results[0].alternatives[0].transcript)
+        print(text)
 
-    #for result in response.results:
-    #    print('Transcript: {}'.format(result.alternatives[0].transcript))
-    return text
+        #for result in response.results:
+        #print('Transcript: {}'.format(text.alternatives[0].transcript))
+        return text
+    except Exception, e:
+            return ""
 
 
 def handle_uploaded_file(f):
