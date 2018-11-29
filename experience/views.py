@@ -21,8 +21,10 @@ from django.core import serializers
 from rest_framework import serializers
 from django.conf import settings
 
-from .serializers import ExperienceSerializer, UserSerializer, UserDetailSerializer
+from .serializers import ExperienceSerializer, UserSerializer, UserDetailSerializer,ExperiencesSerializer
+from calls.serializers import CallsSerializer
 from .models import Experience, UserDetail
+from calls.models import Calls
 #import numpy as np
 #import matplotlib.pyplot as plt
 #from wordcloud import WordCloud
@@ -36,6 +38,28 @@ parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 
 # Create your views here.
+
+
+##el siguiente metodo retornara toda la data de experiencias y calls en formato json
+@api_view(['GET'])
+def getExpAndCalls(request):
+    experiences=''
+    calls=''
+    try:
+        experiences = Experience.objects.all().values()  # or simply .values() to get all fields
+        experiences = list(experiences)  # important: convert the QuerySet to a list object
+
+        calls = Calls.objects.all().values()  # or simply .values() to get all fields
+        calls = list(calls)  # important: convert the QuerySet to a list object
+
+    except experiences.DoesNotExist:
+        calls = None
+        experiences = None
+
+    content = {'experiences': experiences,'calls':calls,  'success': 1}
+    return Response(content)
+
+
 
 @api_view(["POST"])
 def RegisterExperience(request):
@@ -120,7 +144,7 @@ def custom_login(request, format=None):
 
     if user is not None:
         try:
-            userdetail = UserDetail.objects.get(user_id=user.id)
+            userdetail = UserDetail.objects.get(user=user.id)
         except UserDetail.DoesNotExist:
             userdetail = None
 
@@ -131,5 +155,9 @@ def custom_login(request, format=None):
         content = {'success': 0}
 
     return Response(content)
+
+
+
+
 
 

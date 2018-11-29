@@ -18,8 +18,8 @@ class Experience(models.Model):
     flag_converted = models.BooleanField()
 
     @classmethod
-    def create(cls, user_id, cliente, lugar, pediste_info, audio1, audio2, conversion_audio1, conversion_audio2):
-        experience = cls(user_id=user_id, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
+    def create(cls, user, cliente, lugar, pediste_info, audio1, audio2, conversion_audio1, conversion_audio2):
+        experience = cls(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
                          conversion_audio1=conversion_audio1, conversion_audio2=conversion_audio2)
         # do something with the book
         return experience
