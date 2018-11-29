@@ -76,7 +76,7 @@ def RegisterExperience(request):
 def convert_voice_to_text(f):
     print('convirtiendo audio')
     # Instantiates a client
-    file_name = "/home/ciudatos/pythonapp/uploads/audios/" + f.name
+    file_name = "/home/ciudatos/uploads/audios/" + f.name
     client = speech.SpeechClient()
 
     # The name of the audio file to transcribe
