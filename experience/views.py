@@ -21,7 +21,7 @@ from django.core import serializers
 from rest_framework import serializers
 from django.conf import settings
 
-from .serializers import ExperienceSerializer, UserSerializer, UserDetailSerializer,ExperiencesSerializer
+from .serializers import ExperienceSerializer, UserSerializer, UserDetailSerializer
 from calls.serializers import CallsSerializer
 from .models import Experience, UserDetail
 from calls.models import Calls
