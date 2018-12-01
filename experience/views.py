@@ -50,6 +50,7 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
+        print(uploaded_file)
         text1 = ""
         text2 = ""
         if uploaded_file:
@@ -90,7 +91,7 @@ def convert_voice_to_text(f):
 
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
-           encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=16000,
 
             language_code='es-ES')
