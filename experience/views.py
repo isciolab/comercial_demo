@@ -90,7 +90,7 @@ def convert_voice_to_text(f):
 
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
-           encoding=enums.RecognitionConfig.AudioEncoding.AMR_NB,
+           encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
 
             language_code='es-ES')
 
