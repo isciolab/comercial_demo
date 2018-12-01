@@ -51,6 +51,7 @@ def RegisterExperience(request):
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
         print(uploaded_file)
+        print(audio1)
         text1 = ""
         text2 = ""
         if uploaded_file:
@@ -75,7 +76,7 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-    #try:
+    try:
         print('convirtiendo audio')
         # Instantiates a client
         file_name = "/home/ciudatos/uploads/audios/" + f.name
@@ -107,9 +108,9 @@ def convert_voice_to_text(f):
         #for result in response.results:
         #print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-    #except Exception:
-    #    print ("error convirtiendo")
-    #    return ""
+    except Exception:
+        print ("error convirtiendo")
+        return ""
 
 
 def handle_uploaded_file(f):
