@@ -91,6 +91,7 @@ def convert_voice_to_text(f):
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=16000,
 
             language_code='es-ES')
 
