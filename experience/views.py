@@ -145,9 +145,8 @@ def handle_uploaded_file(f):
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
     file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
-        destination.write(audiofile_byte)
-       # for chunk in f.chunks():
-        #    destination.write(chunk)
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 
