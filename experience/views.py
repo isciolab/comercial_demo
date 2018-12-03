@@ -139,7 +139,7 @@ def convert_voice_to_text(f):
 
 
 def handle_uploaded_file(f):
-    //audiofile_byte = base64.b64decode(f)
+    #audiofile_byte = base64.b64decode(f)
 
     print(f.name)
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
