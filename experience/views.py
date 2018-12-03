@@ -74,8 +74,8 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
-        print(request.FILES)
-        print(uploaded_file.size)
+        #print(request.FILES)
+       # print(uploaded_file.size)
        # print(audio1)
         text1 = ""
         text2 = ""
