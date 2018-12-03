@@ -147,7 +147,7 @@ def handle_uploaded_file(f):
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
             audiofile_byte = base64.b64decode(chunk)
-            destination.write(audiofile_byte)
+            destination.write(chunk)
 
 
 
