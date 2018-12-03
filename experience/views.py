@@ -64,7 +64,8 @@ def getExpAndCalls(request):
 @api_view(["POST"])
 def RegisterExperience(request):
     try:
-        user = request.data.get('user')
+
+        user = request.data.get('user', '')
         cliente = request.data.get('cliente')
         lugar = request.data.get('lugar')
         pediste_info = request.data.get('pediste_info')
@@ -73,6 +74,8 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
+        print(uploaded_file)
+        print(audio1)
         text1 = ""
         text2 = ""
         if uploaded_file:
@@ -97,39 +100,46 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-    print('convirtiendo audio')
-    # Instantiates a client
-    file_name = "/home/ciudatos/pythonapp/uploads/audios/" + f.name
-    client = speech.SpeechClient()
+    try:
+        print('convirtiendo audio')
+        # Instantiates a client
+        file_name = "/home/ciudatos/uploads/audios/" + f.name
+        client = speech.SpeechClient()
 
-    # The name of the audio file to transcribe
-    file_name = file_name
+        # The name of the audio file to transcribe
+        file_name = file_name
 
-    print(file_name)
-    # Loads the audio into memory
-    with io.open(file_name, 'rb') as audio_file:
-        content = audio_file.read()
+        print(file_name)
+        # Loads the audio into memory
+        with io.open(file_name, 'rb') as audio_file:
+            content = audio_file.read()
 
-    audio = types.RecognitionAudio(content=content)
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        audio = types.RecognitionAudio(content=content)
+        config = types.RecognitionConfig(
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=16000,
 
-        language_code='es-ES')
+            language_code='es-ES')
 
-    # Detects speech in the audio file
-    response = client.recognize(config, audio)
+        # Detects speech in the audio file
+        response = client.recognize(config, audio)
 
-    text = format(response.results[0].alternatives[0].transcript)
-    print(text)
+        text ="hola"
+        print(response.results)
+        #text = format(response.results[0].alternatives[0].transcript)
+        #print(text)
 
-    #for result in response.results:
-    #    print('Transcript: {}'.format(result.alternatives[0].transcript))
-    return text
+        #for result in response.results:
+        #print('Transcript: {}'.format(text.alternatives[0].transcript))
+        return text
+    except Exception:
+        print ("error convirtiendo")
+        return ""
 
 
 def handle_uploaded_file(f):
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
-    file_path = "/home/ciudatos/pythonapp/uploads/audios/"
+    file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
