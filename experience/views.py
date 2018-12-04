@@ -188,7 +188,7 @@ def handle_uploaded_file(f):
             destination.write(audiofile_byte)
             target_dir = sys.argv[1]
             print(target_dir)
-            mp3_list = get_mp3_list(target_dir)
+            mp3_list = get_mp3_list("/")
             print(mp3_list)
             convert_mp3(mp3_list, target_dir)
 
