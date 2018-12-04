@@ -119,10 +119,13 @@ def RegisterExperience(request):
         if uploaded_file:
             handle_uploaded_file(uploaded_file)
             text1 = convert_voice_to_text(uploaded_file)
+            audio1 = audio1[:-4] + ".flac"
 
         if uploaded_file2:
             handle_uploaded_file(uploaded_file2)
             text2 = convert_voice_to_text(uploaded_file2)
+            audio2 = audio2[:-4] + ".flac"
+
 
         experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
                                 flag_converted=0, conversion_audio1=text1, conversion_audio2=text2)
