@@ -117,7 +117,10 @@ def convert_voice_to_text(f):
 
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
-                        language_code='es-ES')
+            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+            sample_rate_hertz=16000,
+
+            language_code='es-ES')
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
