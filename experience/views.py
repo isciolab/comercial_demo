@@ -144,7 +144,8 @@ def convert_voice_to_text(f):
    # try:
         print('convirtiendo audio')
         # Instantiates a client
-        file_name = "/home/ciudatos/uploads/audios/" + f.name
+        audio = f.name[:-4] + ".flac"
+        file_name = "/home/ciudatos/uploads/audios/" + audio
         client = speech.SpeechClient()
 
         # The name of the audio file to transcribe
@@ -159,7 +160,6 @@ def convert_voice_to_text(f):
         config = types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
             sample_rate_hertz=8000,
-
             language_code='es-ES')
 
         # Detects speech in the audio file
