@@ -26,19 +26,21 @@ from .serializers import ExperienceSerializer, UserSerializer, UserDetailSeriali
 from calls.serializers import CallsSerializer
 from .models import Experience, UserDetail
 from calls.models import Calls
-#import numpy as np
-#import matplotlib.pyplot as plt
-#from wordcloud import WordCloud
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from wordcloud import WordCloud
 from subprocess import call
 # Imports the Google Cloud client library
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from pprint import PrettyPrinter
+
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import requests
 from requests.auth import HTTPDigestAuth
+
 
 # Create your views here.
 
@@ -46,8 +48,8 @@ from requests.auth import HTTPDigestAuth
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
 def getExpAndCalls(request):
-    experiences=''
-    calls=''
+    experiences = ''
+    calls = ''
     try:
         experiences = Experience.objects.all().values()  # or simply .values() to get all fields
         experiences = list(experiences)  # important: convert the QuerySet to a list object
@@ -59,26 +61,28 @@ def getExpAndCalls(request):
         calls = None
         experiences = None
 
-    content = {'experiences': experiences,'calls':calls,  'success': 1}
+    content = {'experiences': experiences, 'calls': calls, 'success': 1}
     return Response(content)
+
 
 ##metodo que hace el print de un objeto o arreglo, en la consola
 def dump(obj):
-   for attr in dir(obj):
-       if hasattr( obj, attr ):
-           print( "obj.%s = %s" % (attr, getattr(obj, attr)))
+    for attr in dir(obj):
+        if hasattr(obj, attr):
+            print("obj.%s = %s" % (attr, getattr(obj, attr)))
+
 
 @api_view(['GET'])
 def getDataByCecula(request):
     cedula = 1032398833
-    res=1;
+    res = 1;
     response_data = {}
     try:
         url = 'https://dash-board.tusdatos.co/api/launch'
         ##url ='http://127.0.0.1:8000/experience/getexpandcalls'
 
         response_data['cedula'] = cedula
-       ## response_data['message'] = 'Datos devueltos'
+        ## response_data['message'] = 'Datos devueltos'
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
         res = requests.post(url, data=json.dumps(response_data), headers=headers)
@@ -89,13 +93,11 @@ def getDataByCecula(request):
         print(res)
 
     except Exception as e:
-        response_data['success']=0
+        response_data['success'] = 0
         response_data['error'] = "Ha ocurrido un error al realizar la solicitud"
         res = response_data
 
-
     return Response(res)
-
 
 
 @api_view(["POST"])
@@ -111,9 +113,9 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
-        #print(request.FILES)
-       # print(uploaded_file.size)
-       # print(audio1)
+        # print(request.FILES)
+        # print(uploaded_file.size)
+        # print(audio1)
         text1 = ""
         text2 = ""
         if uploaded_file:
@@ -126,8 +128,8 @@ def RegisterExperience(request):
             text2 = convert_voice_to_text(uploaded_file2)
             audio2 = audio2[:-4] + ".flac"
 
-
-        experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
+        experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1,
+                                audio2=audio2,
                                 flag_converted=0, conversion_audio1=text1, conversion_audio2=text2)
         experience.save()
 
@@ -141,7 +143,7 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-   # try:
+    try:
         print('convirtiendo audio')
         # Instantiates a client
         audio = f.name[:-4] + ".flac"
@@ -165,25 +167,25 @@ def convert_voice_to_text(f):
         # Detects speech in the audio file
         response = client.recognize(config, audio)
 
-        #text ="hola"
+        # text ="hola"
         print(response.results)
         text = format(response.results[0].alternatives[0].transcript)
         print(text)
 
-        #for result in response.results:
-        #print('Transcript: {}'.format(text.alternatives[0].transcript))
+        # for result in response.results:
+        # print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-#    except Exception:
- #       print ("error convirtiendo")
-  #      return ""
+    except Exception:
+        print ("error convirtiendo")
+        return ""
 
 
 def handle_uploaded_file(f):
-    #audiofile_byte = base64.b64decode(f)
+    # audiofile_byte = base64.b64decode(f)
 
 
     print(f.name)
-    #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
+    # file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
     file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
@@ -191,12 +193,9 @@ def handle_uploaded_file(f):
             destination.write(audiofile_byte)
             target_dir = sys.argv[1]
             print(target_dir)
-           # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
-            #print(mp3_list)
-            convert_mp3("/home/ciudatos/uploads/audios/"+f.name)
-
-
-
+            # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
+            # print(mp3_list)
+            convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
 @api_view(['POST'])
@@ -213,18 +212,20 @@ def custom_login(request, format=None):
 
         serializer = UserSerializer(user)
         serializerdetail = UserDetailSerializer(userdetail)
-        content = {'user': serializer.data, 'userdetail':serializerdetail.data, 'success': 1}
+        content = {'user': serializer.data, 'userdetail': serializerdetail.data, 'success': 1}
     else:
         content = {'success': 0}
 
     return Response(content)
+
 
 # show variables (for troubleshooting)
 def show_vars(target_dir):
     print('target_dir = ' + target_dir)
     print('target_dir (absolute) = ' + os.path.abspath(target_dir))
 
-#get full list of mp3 files from your target directory
+
+# get full list of mp3 files from your target directory
 def get_mp3_list(target_dir):
     mp3_list = []
     for root, dirs, files in os.walk(target_dir):
@@ -241,17 +242,11 @@ def get_mp3_list(target_dir):
     return mp3_list
 
 
-#convert mp3 to flac if the flac target file does not already exist
+# convert mp3 to flac if the flac target file does not already exist
 def convert_mp3(mp3):
-    #for mp3 in mp3_list:
-        flac = mp3[:-4] + ".flac"
-        if os.path.isfile(flac):
-            print('File ' + flac + ' already exists')
-        else:
-            call(["ffmpeg", "-i", mp3, flac])
-
-
-
-
-
-
+    # for mp3 in mp3_list:
+    flac = mp3[:-4] + ".flac"
+    if os.path.isfile(flac):
+        print('File ' + flac + ' already exists')
+    else:
+        call(["ffmpeg", "-i", mp3, flac])
