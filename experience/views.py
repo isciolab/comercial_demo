@@ -138,7 +138,7 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-  #  try:
+    try:
         print('convirtiendo audio')
         # Instantiates a client
         file_name = "/home/ciudatos/uploads/audios/" + f.name
@@ -170,9 +170,9 @@ def convert_voice_to_text(f):
         #for result in response.results:
         #print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-   # except Exception:
-    #    print ("error convirtiendo")
-    #    return ""
+    except Exception:
+        print ("error convirtiendo")
+        return ""
 
 
 def handle_uploaded_file(f):
@@ -186,10 +186,13 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             audiofile_byte = base64.b64decode(chunk)
             destination.write(audiofile_byte)
+            target_dir = sys.argv[1]
+            print(target_dir)
+            mp3_list = get_mp3_list(target_dir)
+            print(mp3_list)
+            convert_mp3(mp3_list, target_dir)
 
-    target_dir = sys.argv[1]
-    mp3_list = get_mp3_list(target_dir)
-    convert_mp3(mp3_list, target_dir)
+
 
 
 
