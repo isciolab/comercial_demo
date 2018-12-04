@@ -191,9 +191,9 @@ def handle_uploaded_file(f):
             destination.write(audiofile_byte)
             target_dir = sys.argv[1]
             print(target_dir)
-            mp3_list = get_mp3_list("/home/ciudatos/uploads/")
-            print(mp3_list)
-            convert_mp3(mp3_list, target_dir)
+           # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
+            #print(mp3_list)
+            convert_mp3("/home/ciudatos/uploads/"+f.name)
 
 
 
@@ -242,8 +242,8 @@ def get_mp3_list(target_dir):
 
 
 #convert mp3 to flac if the flac target file does not already exist
-def convert_mp3(mp3_list,target_dir):
-    for mp3 in mp3_list:
+def convert_mp3(mp3):
+    #for mp3 in mp3_list:
         flac = mp3[:-4] + ".flac"
         if os.path.isfile(flac):
             print('File ' + flac + ' already exists')
