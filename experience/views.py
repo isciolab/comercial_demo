@@ -216,7 +216,7 @@ def custom_login(request, format=None):
 # show variables (for troubleshooting)
 def show_vars(target_dir):
     print('target_dir = ' + target_dir)
-print('target_dir (absolute) = ' + os.path.abspath(target_dir))
+    print('target_dir (absolute) = ' + os.path.abspath(target_dir))
 
 #get full list of mp3 files from your target directory
 def get_mp3_list(target_dir):
