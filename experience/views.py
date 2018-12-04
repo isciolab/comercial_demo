@@ -154,21 +154,21 @@ def convert_voice_to_text(f):
 
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=16000,
+            encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+            #sample_rate_hertz=16000,
 
             language_code='es-ES')
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
 
-        text ="hola"
+        #text ="hola"
         print(response.results)
-        #text = format(response.results[0].alternatives[0].transcript)
-        #print(text)
+        text = format(response.results[0].alternatives[0].transcript)
+        print(text)
 
         #for result in response.results:
-        #print('Transcript: {}'.format(text.alternatives[0].transcript))
+        print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
     except Exception:
         print ("error convirtiendo")
