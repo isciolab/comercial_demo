@@ -232,7 +232,7 @@ def get_mp3_list(target_dir):
             print(path)
             for file in os.listdir(path):
                 if file.endswith(".3gp"):
-                    return_data = path + file
+                    return_data = path + "/" + file
                     print(return_data)
                     mp3_list.append(return_data)
     return mp3_list
