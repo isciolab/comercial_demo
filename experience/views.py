@@ -7,7 +7,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.views import APIView
-
+import base64
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 import io
 import os
@@ -110,8 +110,9 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
-        print(uploaded_file)
-        print(audio1)
+        #print(request.FILES)
+       # print(uploaded_file.size)
+       # print(audio1)
         text1 = ""
         text2 = ""
         if uploaded_file:
@@ -136,7 +137,7 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-    try:
+  #  try:
         print('convirtiendo audio')
         # Instantiates a client
         file_name = "/home/ciudatos/uploads/audios/" + f.name
@@ -168,17 +169,22 @@ def convert_voice_to_text(f):
         #for result in response.results:
         #print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-    except Exception:
-        print ("error convirtiendo")
-        return ""
+   # except Exception:
+    #    print ("error convirtiendo")
+    #    return ""
 
 
 def handle_uploaded_file(f):
+    #audiofile_byte = base64.b64decode(f)
+
+
+    print(f.name)
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
     file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
-            destination.write(chunk)
+            audiofile_byte = base64.b64decode(chunk)
+            destination.write(audiofile_byte)
 
 
 
