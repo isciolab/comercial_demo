@@ -7,7 +7,7 @@ from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.views import APIView
-
+import base64
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 import io
 import os
@@ -69,7 +69,7 @@ def registerCall(request):
             text1 = convert_voice_to_text(uploaded_file)
 
         call = Calls(user=user, addressee=addressee, location=location, duration_call=duration_call, origin_number=origin_number,
-                     audio=audio1,convert_to_text=text1)
+                     audio=audio1, convert_to_text=text1)
         call.save()
 
         serializer = CallsSerializer(call)
@@ -84,7 +84,7 @@ def registerCall(request):
 def convert_voice_to_text(f):
     print('convirtiendo audio')
     # Instantiates a client
-    file_name = "/home/ciudatos/pythonapp/uploads/audios/" + f.name
+    file_name = "/home/ciudatos/uploads/audios/" + f.name
     client = speech.SpeechClient()
 
     # The name of the audio file to transcribe
@@ -114,10 +114,11 @@ def convert_voice_to_text(f):
 
 def handle_uploaded_file(f):
     #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
-    file_path = "/home/ciudatos/pythonapp/uploads/audios/"
+    file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
-            destination.write(chunk)
+            audiofile_byte = base64.b64decode(chunk)
+            destination.write(audiofile_byte)
 
 
 
