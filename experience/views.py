@@ -188,7 +188,7 @@ def handle_uploaded_file(f):
             destination.write(audiofile_byte)
             target_dir = sys.argv[1]
             print(target_dir)
-            mp3_list = get_mp3_list("/home/ciudatos/uploads/audios/")
+            mp3_list = get_mp3_list("/home/ciudatos/uploads/")
             print(mp3_list)
             convert_mp3(mp3_list, target_dir)
 
@@ -232,7 +232,7 @@ def get_mp3_list(target_dir):
             print(path)
             for file in os.listdir(path):
                 if file.endswith(".3gp"):
-                    return_data = path  + file
+                    return_data = path + file
                     print(return_data)
                     mp3_list.append(return_data)
     return mp3_list
