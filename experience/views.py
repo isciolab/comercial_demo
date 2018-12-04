@@ -193,7 +193,7 @@ def handle_uploaded_file(f):
             print(target_dir)
            # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
             #print(mp3_list)
-            convert_mp3("/home/ciudatos/uploads/"+f.name)
+            convert_mp3("/home/ciudatos/uploads/audios/"+f.name)
 
 
 
