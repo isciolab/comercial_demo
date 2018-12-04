@@ -225,8 +225,11 @@ def show_vars(target_dir):
 def get_mp3_list(target_dir):
     mp3_list = []
     for root, dirs, files in os.walk(target_dir):
+        print(root)
+        print(dirs)
         for dir in dirs:
             path = root + dir
+            print(path)
             for file in os.listdir(path):
                 if file.endswith(".3gp"):
                     return_data = path + "/home/ciudatos/uploads/audios/" + file
