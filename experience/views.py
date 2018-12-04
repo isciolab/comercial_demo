@@ -34,9 +34,11 @@ from subprocess import call
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
-
+from pprint import PrettyPrinter
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
+import requests
+from requests.auth import HTTPDigestAuth
 
 # Create your views here.
 
@@ -59,6 +61,40 @@ def getExpAndCalls(request):
 
     content = {'experiences': experiences,'calls':calls,  'success': 1}
     return Response(content)
+
+##metodo que hace el print de un objeto o arreglo, en la consola
+def dump(obj):
+   for attr in dir(obj):
+       if hasattr( obj, attr ):
+           print( "obj.%s = %s" % (attr, getattr(obj, attr)))
+
+@api_view(['GET'])
+def getDataByCecula(request):
+    cedula = 1032398833
+    res=1;
+    response_data = {}
+    try:
+        url = 'https://dash-board.tusdatos.co/api/launch'
+        ##url ='http://127.0.0.1:8000/experience/getexpandcalls'
+
+        response_data['cedula'] = cedula
+       ## response_data['message'] = 'Datos devueltos'
+
+        headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
+        res = requests.post(url, data=json.dumps(response_data), headers=headers)
+        ##res=requests.get(url)
+
+        print(dump(res))
+        print("prueaaaaaaaaaaaaaaa")
+        print(res)
+
+    except Exception as e:
+        response_data['success']=0
+        response_data['error'] = "Ha ocurrido un error al realizar la solicitud"
+        res = response_data
+
+
+    return Response(res)
 
 
 

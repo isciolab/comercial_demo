@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^experience/register', experience_views.RegisterExperience),
     url(r'^experience/getexpandcalls', experience_views.getExpAndCalls),
+    url(r'^experience/getDataByCecula', experience_views.getDataByCecula),
     url(r'^custom_login', experience_views.custom_login),
     url(r'^calls/getCalls', calls_views.getCalls),
     url(r'^calls/registerCall', calls_views.registerCall)
