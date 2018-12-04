@@ -171,7 +171,7 @@ def convert_voice_to_text(f):
         print(text)
 
         #for result in response.results:
-        print('Transcript: {}'.format(text.alternatives[0].transcript))
+        #print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
 #    except Exception:
  #       print ("error convirtiendo")
