@@ -1,3 +1,5 @@
+from subprocess import call
+
 from django.core.files.storage import default_storage
 from django.shortcuts import render
 
@@ -67,6 +69,7 @@ def registerCall(request):
         if uploaded_file:
             handle_uploaded_file(uploaded_file)
             text1 = convert_voice_to_text(uploaded_file)
+            audio1 = audio1[:-4] + ".flac"
 
         call = Calls(user=user, addressee=addressee, location=location, duration_call=duration_call, origin_number=origin_number,
                      audio=audio1, convert_to_text=text1)
@@ -82,34 +85,41 @@ def registerCall(request):
 
 
 def convert_voice_to_text(f):
-    print('convirtiendo audio')
-    # Instantiates a client
-    file_name = "/home/ciudatos/uploads/audios/" + f.name
-    client = speech.SpeechClient()
+    try:
+        print('convirtiendo audio')
+        # Instantiates a client
+        audio = f.name[:-4] + ".flac"
+        file_name = "/home/ciudatos/uploads/audios/" + audio
 
-    # The name of the audio file to transcribe
-    file_name = file_name
+        client = speech.SpeechClient()
 
-    print(file_name)
-    # Loads the audio into memory
-    with io.open(file_name, 'rb') as audio_file:
-        content = audio_file.read()
+        # The name of the audio file to transcribe
+        file_name = file_name
 
-    audio = types.RecognitionAudio(content=content)
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        print(file_name)
+        # Loads the audio into memory
+        with io.open(file_name, 'rb') as audio_file:
+            content = audio_file.read()
 
-        language_code='es-ES')
+        audio = types.RecognitionAudio(content=content)
+        config = types.RecognitionConfig(
+            encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+            sample_rate_hertz=8000,
+            language_code='es-ES')
 
-    # Detects speech in the audio file
-    response = client.recognize(config, audio)
+        # Detects speech in the audio file
+        response = client.recognize(config, audio)
 
-    text = format(response.results[0].alternatives[0].transcript)
-    print(text)
+        print(response.results)
+        text = format(response.results[0].alternatives[0].transcript)
+        print(text)
 
-    #for result in response.results:
-    #    print('Transcript: {}'.format(result.alternatives[0].transcript))
-    return text
+        # for result in response.results:
+        # print('Transcript: {}'.format(text.alternatives[0].transcript))
+        return text
+    except Exception:
+            print ("error convirtiendo")
+            return ""
 
 
 def handle_uploaded_file(f):
@@ -119,7 +129,19 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             audiofile_byte = base64.b64decode(chunk)
             destination.write(audiofile_byte)
+            # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
+            # print(mp3_list)
+            convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
+
+# convert mp3 to flac if the flac target file does not already exist
+def convert_mp3(mp3):
+    # for mp3 in mp3_list:
+    flac = mp3[:-4] + ".flac"
+    if os.path.isfile(flac):
+        print('File ' + flac + ' already exists')
+    else:
+        call(["ffmpeg", "-i", mp3, flac])
 
 

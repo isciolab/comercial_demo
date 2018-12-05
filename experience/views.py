@@ -191,8 +191,6 @@ def handle_uploaded_file(f):
         for chunk in f.chunks():
             audiofile_byte = base64.b64decode(chunk)
             destination.write(audiofile_byte)
-            target_dir = sys.argv[1]
-            print(target_dir)
             # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
             # print(mp3_list)
             convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
