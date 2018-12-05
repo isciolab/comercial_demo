@@ -37,8 +37,7 @@ from pprint import PrettyPrinter
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import requests
-from requests.auth import HTTPDigestAuth
-
+##from requests.auth import HTTPBasicAuth
 # Create your views here.
 
 
@@ -73,7 +72,7 @@ def getDataByCecula(request):
     res=1;
     response_data = {}
     try:
-        url = 'https://dash-board.tusdatos.co/api/launch'
+        url = 'https://sosorno@isciolab.com:SCHsas2018@dash-board.tusdatos.co/api/launch'
         ##url ='http://127.0.0.1:8000/experience/getexpandcalls'
 
         response_data['cedula'] = cedula
