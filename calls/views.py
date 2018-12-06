@@ -85,7 +85,7 @@ def registerCall(request):
 
 
 def convert_voice_to_text(f):
-    try:
+    #try:
         print('convirtiendo audio')
         # Instantiates a client
         audio = f.name[:-4] + ".flac"
@@ -117,9 +117,9 @@ def convert_voice_to_text(f):
         # for result in response.results:
         # print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-    except Exception:
-            print ("error convirtiendo")
-            return ""
+    #except Exception:
+    #        print ("error convirtiendo")
+     #       return ""
 
 
 def handle_uploaded_file(f):
