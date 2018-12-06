@@ -167,9 +167,12 @@ def convert_voice_to_text(f):
         # Detects speech in the audio file
         response = client.recognize(config, audio)
 
-        # text ="hola"
+        text = ""
         print(response.results)
-        text = format(response.results[0].alternatives[0].transcript)
+        for result in response.results:
+             print('Transcript: {}'.format(result.alternatives[0].transcript))
+             text =+format(result.alternatives[0].transcript)
+
         print(text)
 
         # for result in response.results:
