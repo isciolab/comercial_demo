@@ -115,8 +115,8 @@ def convert_voice_to_text(f):
 
 
         for result in response.results:
-             print('Transcript: {}'.format(text.alternatives[0].transcript))
-             text =+format(text.alternatives[0].transcript)
+             print('Transcript: {}'.format(result.transcript))
+             text =+format(result.transcript)
 
 
         print(text)
