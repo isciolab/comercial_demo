@@ -111,11 +111,15 @@ def convert_voice_to_text(f):
         response = client.recognize(config, audio)
 
         print(response.results)
-        text = format(response.results[0].alternatives[0].transcript)
-        print(text)
+        text = ""
 
-        # for result in response.results:
-        # print('Transcript: {}'.format(text.alternatives[0].transcript))
+
+        for result in response.results:
+             print('Transcript: {}'.format(text.alternatives[0].transcript))
+             text =+format(text.alternatives[0].transcript)
+
+
+        print(text)
         return text
     #except Exception:
     #        print ("error convirtiendo")
