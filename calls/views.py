@@ -130,7 +130,7 @@ def convert_voice_to_text(f):
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
-            sample_rate_hertz=8000,
+            #sample_rate_hertz=8000,
             language_code='es-ES')
 
         # Detects speech in the audio file
