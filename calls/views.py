@@ -174,7 +174,7 @@ def convert_mp3(mp3):
         print('File ' + flac + ' already exists')
     else:
         #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
-        #call('ffmpeg -i '+mp3+' -ac 1 ' + str(flac), shell=True)
-        call('ffmpeg -i '+mp3+' -filter_complex channelsplit=channel_layout=stereo ' + str(flac), shell=True)
+        call('ffmpeg -i '+mp3+' -ac 1 ' + str(flac), shell=True)
+        #call('ffmpeg -i '+mp3+' -filter_complex channelsplit=channel_layout=stereo ' + str(flac), shell=True)
 
 
