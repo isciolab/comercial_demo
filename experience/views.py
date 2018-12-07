@@ -63,6 +63,11 @@ def getexpandcalls(request):
         experiences = None
 
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
+    try:
+        with open('~Dropbox/demo/ouput/call.json', 'w') as outfile:
+            json.dump(content, outfile)
+    except Exception:
+        print ("No se subio ela rchivo")
     return Response(content)
 
 
