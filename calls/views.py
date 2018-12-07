@@ -111,7 +111,7 @@ def readfileouput(request):
 
 
 def convert_voice_to_text(f):
-    #try:
+   # try:
         print('convirtiendo audio')
         # Instantiates a client
         audio = f.name[:-4] + ".flac"
@@ -130,7 +130,7 @@ def convert_voice_to_text(f):
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
-            sample_rate_hertz=8000,
+            #sample_rate_hertz=8000,
             language_code='es-ES')
 
         # Detects speech in the audio file
@@ -149,8 +149,8 @@ def convert_voice_to_text(f):
         print(text)
         return text
     #except Exception:
-    #        print ("error convirtiendo")
-     #       return ""
+    #    print ("error convirtiendo")
+    #    return ""
 
 
 def handle_uploaded_file(f):
@@ -173,6 +173,7 @@ def convert_mp3(mp3):
     if os.path.isfile(flac):
         print('File ' + flac + ' already exists')
     else:
-        call(["ffmpeg", "-i", mp3, flac])
+        #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        call('ffmpeg -i '+mp3+' -ac 1 ' + str(flac), shell=True)
 
 
