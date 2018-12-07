@@ -13,8 +13,10 @@ urlpatterns = [
     url(r'^logout/$', auth_views.LogoutView.as_view(template_name='logged_out.html'), name='logout'),
     url(r'^admin/', admin.site.urls),
     url(r'^experience/register', experience_views.RegisterExperience),
-    url(r'^experience/getexpandcalls', experience_views.getExpAndCalls),
+    url(r'^experience/getexpandcalls', experience_views.getexpandcalls),
     url(r'^experience/getDataByCecula', experience_views.getDataByCecula),
+    url(r'^experience/readfileouput', experience_views.readfileouput),
+    url(r'^calls/readfileouput', calls_views.readfileouput),
     url(r'^custom_login', experience_views.custom_login),
     url(r'^calls/getCalls', calls_views.getCalls),
     url(r'^calls/registerCall', calls_views.registerCall)

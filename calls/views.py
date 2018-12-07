@@ -30,9 +30,11 @@ from google.cloud.speech import types
 
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
+import os.path ##libreria que verifica si los archivos existen
+rutainputdropbox="./input/"
+rutaouputdropbox="./ouput/"
 
 # Create your views here.
-
 
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
@@ -74,11 +76,32 @@ def registerCall(request):
 
         serializer = CallsSerializer(call)
         content = {'call': serializer.data, 'success': 1}
+
+        ##escribo el archivo en la ruta de dropbox
+        with open(rutainputdropbox + 'rutainputdropbox.json', 'w') as outfile:
+            json.dump(content, outfile)
         return Response(content)
 
     except ValueError as e:
 
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
+
+##este metodo lee el archivo json de la carpeta ouput
+@api_view(['GET'])
+def readfileouput(request):
+    data=""
+    content = {'success': 1}
+    ruta=rutadropbox+'call.json'
+    if os.path.isfile(ruta):
+        with open(rutadropbox+'call.json') as f:
+            ##aqui obtengo el archivo
+            data = json.load(f)
+            print(dump(data))
+    else:
+        content['success']=0
+    return Response(content)
+
+
 
 
 def convert_voice_to_text(f):
