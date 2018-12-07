@@ -41,27 +41,16 @@ import json ##para retornar data en json
 import requests
 import os.path ##libreria que verifica si los archivos existen
 
-<<<<<<< HEAD
-##from requests.auth import HTTPBasicAuth
-=======
-
->>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
-# Create your views here.
 
 rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
 rutainputdropbox="./input/"
 rutaouputdropbox="./ouput/"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
-<<<<<<< HEAD
+
 def getexpandcalls(request):
     experiences=''
     calls=''
-=======
-def getExpAndCalls(request):
-    experiences = ''
-    calls = ''
->>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
     try:
         experiences = Experience.objects.all().values()  # or simply .values() to get all fields
         experiences = list(experiences)  # important: convert the QuerySet to a list object
@@ -77,7 +66,7 @@ def getExpAndCalls(request):
     return Response(content)
 
 
-<<<<<<< HEAD
+
 ##este metodo lee el archivo json de la carpeta ouput
 @api_view(['GET'])
 def readfileouput(request):
@@ -94,8 +83,7 @@ def readfileouput(request):
     return Response(content)
 
 
-=======
->>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
+
 ##metodo que hace el print de un objeto o arreglo, en la consola
 def dump(obj):
     for attr in dir(obj):
@@ -172,7 +160,7 @@ def RegisterExperience(request):
         content = {'experience': serializer.data, 'success': 1}
 
         ##escribo el archivo en la ruta de dropbox
-        with open(rutadropbox + 'experience.json', 'w') as outfile:
+        with open(rutainputdropbox + 'experience.json', 'w') as outfile:
             json.dump(content, outfile)
 
         return Response(content)
