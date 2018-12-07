@@ -81,8 +81,11 @@ def registerCall(request):
         content = {'call': serializer.data, 'success': 1}
 
         ##escribo el archivo en la ruta de dropbox
-        with open(rutainputdropbox + 'call.json', 'w') as outfile:
-            json.dump(content, outfile)
+        try:
+            with open(rutainputdropbox + 'call.json', 'w') as outfile:
+                json.dump(content, outfile)
+        except Exception:
+            print ("No se subio ela rchivo")
         return Response(content)
 
     except ValueError as e:
