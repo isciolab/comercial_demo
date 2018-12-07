@@ -1,3 +1,4 @@
+import sys
 from django.core.files.storage import default_storage
 from django.shortcuts import render
 
@@ -25,21 +26,26 @@ from .serializers import ExperienceSerializer, UserSerializer, UserDetailSeriali
 from calls.serializers import CallsSerializer
 from .models import Experience, UserDetail
 from calls.models import Calls
-#import numpy as np
-#import matplotlib.pyplot as plt
-#from wordcloud import WordCloud
-
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from wordcloud import WordCloud
+from subprocess import call
 # Imports the Google Cloud client library
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from pprint import PrettyPrinter
+
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json ##para retornar data en json
 import requests
 import os.path ##libreria que verifica si los archivos existen
 
+<<<<<<< HEAD
 ##from requests.auth import HTTPBasicAuth
+=======
+
+>>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
 # Create your views here.
 
 rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
@@ -47,9 +53,15 @@ rutainputdropbox="./input/"
 rutaouputdropbox="./ouput/"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
+<<<<<<< HEAD
 def getexpandcalls(request):
     experiences=''
     calls=''
+=======
+def getExpAndCalls(request):
+    experiences = ''
+    calls = ''
+>>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
     try:
         experiences = Experience.objects.all().values()  # or simply .values() to get all fields
         experiences = list(experiences)  # important: convert the QuerySet to a list object
@@ -61,10 +73,11 @@ def getexpandcalls(request):
         calls = None
         experiences = None
 
-    content = {'experiences': experiences,'calls':calls,  'success': 1}
+    content = {'experiences': experiences, 'calls': calls, 'success': 1}
     return Response(content)
 
 
+<<<<<<< HEAD
 ##este metodo lee el archivo json de la carpeta ouput
 @api_view(['GET'])
 def readfileouput(request):
@@ -81,16 +94,19 @@ def readfileouput(request):
     return Response(content)
 
 
+=======
+>>>>>>> a89628d53fa2ba7e80e80ff67af0ebba8b5560d4
 ##metodo que hace el print de un objeto o arreglo, en la consola
 def dump(obj):
-   for attr in dir(obj):
-       if hasattr( obj, attr ):
-           print( "obj.%s = %s" % (attr, getattr(obj, attr)))
+    for attr in dir(obj):
+        if hasattr(obj, attr):
+            print("obj.%s = %s" % (attr, getattr(obj, attr)))
+
 
 @api_view(['GET'])
 def getDataByCecula(request):
     cedula = 1032398833
-    res=1;
+    res = 1;
     response_data = {}
     try:
         ##/api/report_json/<id>.
@@ -100,7 +116,7 @@ def getDataByCecula(request):
         ##url ='http://127.0.0.1:8000/experience/getexpandcalls'
 
         response_data['cedula'] = cedula
-       ## response_data['message'] = 'Datos devueltos'
+        ## response_data['message'] = 'Datos devueltos'
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
         ##res = requests.post(url, data=json.dumps(response_data), headers=headers)
@@ -112,13 +128,11 @@ def getDataByCecula(request):
         print(res)
 
     except Exception as e:
-        response_data['success']=0
+        response_data['success'] = 0
         response_data['error'] = "Ha ocurrido un error al realizar la solicitud"
         res = response_data
 
-
     return Response(res)
-
 
 
 @api_view(["POST"])
@@ -134,20 +148,23 @@ def RegisterExperience(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
 
-        #print(request.FILES)
-       # print(uploaded_file.size)
-       # print(audio1)
+        # print(request.FILES)
+        # print(uploaded_file.size)
+        # print(audio1)
         text1 = ""
         text2 = ""
         if uploaded_file:
             handle_uploaded_file(uploaded_file)
             text1 = convert_voice_to_text(uploaded_file)
+            audio1 = audio1[:-4] + ".flac"
 
         if uploaded_file2:
             handle_uploaded_file(uploaded_file2)
             text2 = convert_voice_to_text(uploaded_file2)
+            audio2 = audio2[:-4] + ".flac"
 
-        experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
+        experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1,
+                                audio2=audio2,
                                 flag_converted=0, conversion_audio1=text1, conversion_audio2=text2)
         experience.save()
 
@@ -166,10 +183,11 @@ def RegisterExperience(request):
 
 
 def convert_voice_to_text(f):
-  #  try:
+    try:
         print('convirtiendo audio')
         # Instantiates a client
-        file_name = "/home/ciudatos/uploads/audios/" + f.name
+        audio = f.name[:-4] + ".flac"
+        file_name = "/home/ciudatos/uploads/audios/" + audio
         client = speech.SpeechClient()
 
         # The name of the audio file to transcribe
@@ -182,39 +200,43 @@ def convert_voice_to_text(f):
 
         audio = types.RecognitionAudio(content=content)
         config = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=16000,
-
+            encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+            sample_rate_hertz=8000,
             language_code='es-ES')
 
         # Detects speech in the audio file
         response = client.recognize(config, audio)
 
-        text ="hola"
+        text = ""
         print(response.results)
-        #text = format(response.results[0].alternatives[0].transcript)
-        #print(text)
+        for result in response.results:
+            print('Transcript: {}'.format(result.alternatives[0].transcript))
+            text = text + format(result.alternatives[0].transcript)
 
-        #for result in response.results:
-        #print('Transcript: {}'.format(text.alternatives[0].transcript))
+        print(text)
+
+        # for result in response.results:
+        # print('Transcript: {}'.format(text.alternatives[0].transcript))
         return text
-   # except Exception:
-    #    print ("error convirtiendo")
-    #    return ""
+    except Exception:
+        print ("error convirtiendo")
+        return ""
 
 
 def handle_uploaded_file(f):
-    #audiofile_byte = base64.b64decode(f)
+    # audiofile_byte = base64.b64decode(f)
 
 
     print(f.name)
-    #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
+    # file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
     file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
             audiofile_byte = base64.b64decode(chunk)
             destination.write(audiofile_byte)
-
+            # mp3_list = get_mp3_list("/home/ciudatos/uploads/")
+            # print(mp3_list)
+            convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
 @api_view(['POST'])
@@ -231,14 +253,41 @@ def custom_login(request, format=None):
 
         serializer = UserSerializer(user)
         serializerdetail = UserDetailSerializer(userdetail)
-        content = {'user': serializer.data, 'userdetail':serializerdetail.data, 'success': 1}
+        content = {'user': serializer.data, 'userdetail': serializerdetail.data, 'success': 1}
     else:
         content = {'success': 0}
 
     return Response(content)
 
 
+# show variables (for troubleshooting)
+def show_vars(target_dir):
+    print('target_dir = ' + target_dir)
+    print('target_dir (absolute) = ' + os.path.abspath(target_dir))
 
 
+# get full list of mp3 files from your target directory
+def get_mp3_list(target_dir):
+    mp3_list = []
+    for root, dirs, files in os.walk(target_dir):
+        print(root)
+        print(dirs)
+        for dir in dirs:
+            path = root + dir
+            print(path)
+            for file in os.listdir(path):
+                if file.endswith(".3gp"):
+                    return_data = path + "/" + file
+                    print(return_data)
+                    mp3_list.append(return_data)
+    return mp3_list
 
 
+# convert mp3 to flac if the flac target file does not already exist
+def convert_mp3(mp3):
+    # for mp3 in mp3_list:
+    flac = mp3[:-4] + ".flac"
+    if os.path.isfile(flac):
+        print('File ' + flac + ' already exists')
+    else:
+        call(["ffmpeg", "-i", mp3, flac])
