@@ -33,7 +33,7 @@ from google.cloud.speech import types
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import os.path ##libreria que verifica si los archivos existen
-rutainputdropbox="./input/"
+rutainputdropbox="/home/ciudatos/pythonapp/input/"
 rutaouputdropbox="./ouput/"
 
 # Create your views here.
@@ -81,7 +81,7 @@ def registerCall(request):
         content = {'call': serializer.data, 'success': 1}
 
         ##escribo el archivo en la ruta de dropbox
-        with open(rutainputdropbox + 'rutainputdropbox.json', 'w') as outfile:
+        with open(rutainputdropbox + 'call.json', 'w') as outfile:
             json.dump(content, outfile)
         return Response(content)
 
