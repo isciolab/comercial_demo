@@ -173,6 +173,7 @@ def convert_mp3(mp3):
     if os.path.isfile(flac):
         print('File ' + flac + ' already exists')
     else:
-        call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        call('ffmpeg -i '+mp3+' -ac 1 ' + str(flac), shell=True)
 
 
