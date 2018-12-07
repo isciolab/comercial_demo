@@ -37,19 +37,20 @@ from google.cloud.speech import types
 from pprint import PrettyPrinter
 
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
-import json
+import json ##para retornar data en json
 import requests
-from requests.auth import HTTPDigestAuth
+import os.path ##libreria que verifica si los archivos existen
 
 
-# Create your views here.
-
-
+rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
+rutainputdropbox="./input/"
+rutaouputdropbox="./ouput/"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
-def getExpAndCalls(request):
-    experiences = ''
-    calls = ''
+
+def getexpandcalls(request):
+    experiences=''
+    calls=''
     try:
         experiences = Experience.objects.all().values()  # or simply .values() to get all fields
         experiences = list(experiences)  # important: convert the QuerySet to a list object
@@ -65,6 +66,24 @@ def getExpAndCalls(request):
     return Response(content)
 
 
+
+##este metodo lee el archivo json de la carpeta ouput
+@api_view(['GET'])
+def readfileouput(request):
+    data=""
+    content = {'success': 1}
+    ruta=rutadropbox+'experience.json'
+    if os.path.isfile(ruta):
+        with open(rutadropbox+'experience.json') as f:
+            ##aqui obtengo el archivo
+            data = json.load(f)
+            print(dump(data))
+    else:
+        content['success']=0
+    return Response(content)
+
+
+
 ##metodo que hace el print de un objeto o arreglo, en la consola
 def dump(obj):
     for attr in dir(obj):
@@ -78,14 +97,18 @@ def getDataByCecula(request):
     res = 1;
     response_data = {}
     try:
-        url = 'https://dash-board.tusdatos.co/api/launch'
+        ##/api/report_json/<id>.
+        url = 'https://sosorno@isciolab.com:SCHsas2018@dash-board.tusdatos.co/api/results/'
+        url = 'https://sosorno@isciolab.com:SCHsas2018@dash-board.tusdatos.co/api/results/97bb6e9e-d26b-45c4-961d-b28836167133'
+        url = 'https://sosorno@isciolab.com:SCHsas2018@dash-board.tusdatos.co/api/report_json/5c0752e0c39de82fe678beb4'
         ##url ='http://127.0.0.1:8000/experience/getexpandcalls'
 
         response_data['cedula'] = cedula
         ## response_data['message'] = 'Datos devueltos'
 
         headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
-        res = requests.post(url, data=json.dumps(response_data), headers=headers)
+        ##res = requests.post(url, data=json.dumps(response_data), headers=headers)
+        res = requests.get(url,  headers=headers)
         ##res=requests.get(url)
 
         print(dump(res))
@@ -135,6 +158,11 @@ def RegisterExperience(request):
 
         serializer = ExperienceSerializer(experience)
         content = {'experience': serializer.data, 'success': 1}
+
+        ##escribo el archivo en la ruta de dropbox
+        with open(rutainputdropbox + 'experience.json', 'w') as outfile:
+            json.dump(content, outfile)
+
         return Response(content)
 
     except ValueError as e:
