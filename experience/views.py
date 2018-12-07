@@ -43,7 +43,7 @@ import os.path ##libreria que verifica si los archivos existen
 
 
 rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
-rutadropbox="/Dropbox/demo/ouput"
+rutadropbox="/root/Dropbox/demo/ouput"
 rutainputdropbox="./input/"
 rutaouputdropbox="./ouput/"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
@@ -64,7 +64,7 @@ def getexpandcalls(request):
         experiences = None
 
     print("existeeeee")
-    print(os.path.isdir("/home/ciudatos/uploads/audios"))
+    print(os.path.isdir(rutadropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
     try:
         with open('~Dropbox/demo/ouput/call.json', 'w') as outfile:
