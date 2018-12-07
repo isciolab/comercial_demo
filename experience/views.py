@@ -44,8 +44,8 @@ import os.path ##libreria que verifica si los archivos existen
 
 rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
 rutadropbox="/root/Dropbox/demo/input"
-rutainputdropbox="/root/Dropbox/demo/input/"
-rutaouputdropbox="/root/Dropbox/demo/ouput/"
+rutainputdropbox="/root/Dropbox/demo/input"
+rutaouputdropbox="/root/Dropbox/demo/ouput"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
 
@@ -67,10 +67,11 @@ def getexpandcalls(request):
     print(os.path.isdir(rutadropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
     try:
-        with open(rutainputdropbox+'call.json', 'w') as outfile:
+        with open(rutainputdropbox+'/call.json', 'w') as outfile:
             json.dump(content, outfile)
-    except Exception:
+    except ValueError as e:
         print ("No se subio el archivo call.json")
+        print(e.args[0])
     return Response(content)
 
 
