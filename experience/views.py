@@ -64,7 +64,7 @@ def getexpandcalls(request):
         experiences = None
 
     print("existeeeee")
-    print(os.path.isdir(rutadropbox))
+    print(os.path.isdir("/home/ciudatos/uploads/audios"))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
     try:
         with open('~Dropbox/demo/ouput/call.json', 'w') as outfile:
