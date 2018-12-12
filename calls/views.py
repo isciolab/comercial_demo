@@ -33,9 +33,12 @@ from google.cloud.speech import types
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import os.path ##libreria que verifica si los archivos existen
-rutainputdropbox="/home/ciudatos/pythonapp/input/"
-rutaouputdropbox="./ouput/"
 
+rutainputdropbox="C:/Users/fernando/Dropbox/demo/input"
+##rutadropbox="/root/Dropbox/demo/input"
+##rutainputdropbox="/root/Dropbox/demo/input"
+rutaouputdropbox="/root/Dropbox/demo/ouput"
+rutaouputdropbox="C:/Users/fernando/Dropbox/demo/ouput"
 # Create your views here.
 
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
@@ -82,8 +85,8 @@ def registerCall(request):
 
         ##escribo el archivo en la ruta de dropbox
         try:
-            with open(rutainputdropbox + 'call.json', 'w') as outfile:
-                json.dump(content, outfile)
+            with open(rutainputdropbox + '/calls' + str(serializer.data['id']) + '.json', 'w') as outfile:
+                json.dump(serializer.data, outfile)
         except Exception:
             print ("No se subio ela rchivo")
         return Response(content)
@@ -95,16 +98,27 @@ def registerCall(request):
 ##este metodo lee el archivo json de la carpeta ouput
 @api_view(['GET'])
 def readfileouput(request):
-    data=""
+    data = ""
     content = {'success': 1}
-    ruta=rutadropbox+'call.json'
-    if os.path.isfile(ruta):
-        with open(rutadropbox+'call.json') as f:
-            ##aqui obtengo el archivo
-            data = json.load(f)
-            print(dump(data))
+    ##busco los archivos den la ruta del dropbox
+    files = os.listdir(rutainputdropbox)
+    print(files)
+    if len(files) > 0:
+        for file in files:
+            ##si empiezan con "c" es que son los calls
+            if file[:1] == "c":
+                with open(rutainputdropbox + '/' + file) as f:
+                    ##aqui obtengo el archivo
+                    data = json.load(f)
+                    print(data)
+                    print(data['id'])
+                    print("lega aqui")
+                    llamada = Calls.objects.get(id=data['id'])
+                    print("lega aquaaaaaaaaaaaaaaaai")
+                    print(llamada)
+
     else:
-        content['success']=0
+        content['success'] = 0
     return Response(content)
 
 

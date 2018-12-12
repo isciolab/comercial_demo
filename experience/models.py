@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-
+from datetime import datetime
+from time import gmtime, strftime
 
 class Experience(models.Model):
 
@@ -16,6 +17,8 @@ class Experience(models.Model):
     audio2 = models.CharField(max_length=255, null=True)
     conversion_audio2 = models.TextField()
     flag_converted = models.BooleanField()
+    expedate = models.DateTimeField(default=datetime.now(), blank=True)
+    prediction = models.DateTimeField(null=True)
 
     @classmethod
     def create(cls, user, cliente, lugar, pediste_info, audio1, audio2, conversion_audio1, conversion_audio2):

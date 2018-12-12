@@ -40,11 +40,11 @@ parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json ##para retornar data en json
 import requests
 import os.path ##libreria que verifica si los archivos existen
+import datetime
 
-
-rutadropbox="C:/Users/fernando/Dropbox/demo/input/"
-rutadropbox="/root/Dropbox/demo/input"
-rutainputdropbox="/root/Dropbox/demo/input"
+rutainputdropbox="C:/Users/fernando/Dropbox/demo/input"
+##rutadropbox="/root/Dropbox/demo/input"
+##rutainputdropbox="/root/Dropbox/demo/input"
 rutaouputdropbox="/root/Dropbox/demo/ouput"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
@@ -59,34 +59,61 @@ def getexpandcalls(request):
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
 
+
+        for attr in calls:
+            print("se imrpimiooooooooooooooooo")
+            print(attr['id'])
+            with open(rutadropbox + '/calls'+str(attr['id'])+'.json', 'w') as outfile:
+                json.dump(attr, outfile,default=cnvertirfecha)
+
+
+
+
     except experiences.DoesNotExist:
         calls = None
         experiences = None
 
-    print("existeeeee")
+
     print(os.path.isdir(rutadropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
     try:
-        with open(rutainputdropbox+'/call.json', 'w') as outfile:
-            json.dump(content, outfile)
+        with open(rutadropbox+'/data.json', 'w') as outfile:
+            json.dump(content,outfile,default=cnvertirfecha)
+
     except ValueError as e:
         print ("No se subio el archivo call.json")
         print(e.args[0])
     return Response(content)
 
 
+##los dos siguientes metodos, son pruebas para convertir las fechas datetime, ya que al intentar serializarlas,
+##con el json.dump, dice que no se puede serializar datetime. Cualquiera de ;as dos funcionan
+def myconverter(o):
+  if type(o) is datetime.date or type(o) is datetime.datetime:
+    return o.isoformat()
+
+def cnvertirfecha(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
 
 ##este metodo lee el archivo json de la carpeta ouput
 @api_view(['GET'])
 def readfileouput(request):
     data=""
     content = {'success': 1}
-    ruta=rutadropbox+'experience.json'
-    if os.path.isfile(ruta):
-        with open(rutadropbox+'experience.json') as f:
-            ##aqui obtengo el archivo
-            data = json.load(f)
-            print(dump(data))
+    ruta=rutainputdropbox
+    ##busco los archivos den la ruta del dropbox
+    files = os.listdir(rutainputdropbox)
+    print(files)
+    if len(files)>0:
+        for file in files:
+            ##si empiezan con "c" es que son los calls
+            if file[:1]=="c":
+                with open(rutainputdropbox + '/'+file) as f:
+                    ##aqui obtengo el archivo
+                    data = json.load(f)
+                    print(data['id'])
+
     else:
         content['success']=0
     return Response(content)
@@ -169,8 +196,8 @@ def RegisterExperience(request):
         content = {'experience': serializer.data, 'success': 1}
 
         ##escribo el archivo en la ruta de dropbox
-        with open(rutainputdropbox + 'experience.json', 'w') as outfile:
-            json.dump(content, outfile)
+        with open(rutainputdropbox + '/experience'+str(serializer.data['id'])+'.json', 'w') as outfile:
+            json.dump(serializer.data, outfile)
 
         return Response(content)
 
