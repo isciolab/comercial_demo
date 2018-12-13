@@ -33,27 +33,27 @@ from google.cloud.speech import types
 
 from django.core.exceptions import ObjectDoesNotExist
 
-
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import requests
-import os.path ##libreria que verifica si los archivos existen
+import os.path  ##libreria que verifica si los archivos existen
 import datetime
 
 from django.db.models import Count
 
-rutainputdropbox="C:/Users/fernando/Dropbox/demo/input"
+rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
 ##rutadropbox="/root/Dropbox/demo/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
-rutaouputdropbox="/root/Dropbox/demo/ouput"
-rutaouputdropbox="C:/Users/fernando/Dropbox/demo/ouput"
+rutaouputdropbox = "/root/Dropbox/demo/ouput"
+rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
+
+
 # Create your views here.
 
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
 def getCalls(request):
-
-    calls=''
+    calls = ''
     try:
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
@@ -61,9 +61,8 @@ def getCalls(request):
     except ObjectDoesNotExist:
         calls = None
 
-    content = {'calls':calls,  'success': 1}
+    content = {'calls': calls, 'success': 1}
     return Response(content)
-
 
 
 @api_view(["POST"])
@@ -72,7 +71,7 @@ def registerCall(request):
         user = request.data.get('user')
         addressee = request.data.get('addressee')
         location = request.data.get('location')
-        duration_call= request.data.get('duration_call')
+        duration_call = request.data.get('duration_call')
         origin_number = request.data.get('origin_number')
 
         audio1 = request.data.get('audio1')
@@ -84,7 +83,8 @@ def registerCall(request):
             text1 = convert_voice_to_text(uploaded_file)
             audio1 = audio1[:-4] + ".flac"
 
-        call = Calls(user=user, addressee=addressee, location=location, duration_call=duration_call, origin_number=origin_number,
+        call = Calls(user=user, addressee=addressee, location=location, duration_call=duration_call,
+                     origin_number=origin_number,
                      audio=audio1, convert_to_text=text1)
         call.save()
 
@@ -102,6 +102,7 @@ def registerCall(request):
     except ValueError as e:
 
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
+
 
 ##este metodo lee el archivo json de la carpeta ouput
 @api_view(['GET'])
@@ -128,36 +129,92 @@ def readfileouput(request):
         content['success'] = 0
     return Response(content)
 
+
 ##este metodo retorna los datos de la llamada por un rango de fecha y por comercial
 @api_view(['GET'])
 def getAllSentim(request):
     try:
-        comercial = request.data.get('comercial','')
-        desde = request.data.get('desde','')
-        hasta = request.data.get('hasta','')
+        comercial = request.data.get('comercial', '')
+        desde = request.data.get('desde', '')
+        hasta = request.data.get('hasta', '')
 
         query = Calls.objects.all().values()
-        if desde!="":
+        if desde != "":
             ##query= Calls.objects.annotate(calldate__gte=desde)
-            query=query.filter(calldate__range=[desde,hasta]).extra(select={'date': "DATE(calldate)"}). \
-                values('date','prediction'). \
-                annotate(count_items=Count('calldate'))\
+            query = query.filter(calldate__gte=desde)
+
+        if hasta != "":
+            query = query.filter(calldate__lt=hasta)
+
+        if comercial != "":
+            query = query.filter(user=comercial)
+
+        if query != "":
+            # query = list(query)
+            ###query = serializers.serialize('json', query)
+            queryfechas = query.extra(select={'date': "DATE(calldate)"}). \
+                values('date'). \
+                annotate(count_items=Count('calldate')) \
                 .order_by('date')
 
+            query = query.extra(select={'date': "DATE(calldate)"}). \
+                values('date', 'prediction'). \
+                annotate(count_items=Count('calldate')) \
+                .order_by('date')
+
+            pickup_dict = []
+            record = {"name": "NEUTRO", "data": []}
+            pickup_dict.append(record)
+
+            record = {"name": "POSITIVO", "data": []}
+            pickup_dict.append(record)
+
+            record = {"name": "negativo", "data": []}
+            pickup_dict.append(record)
+
+            fechas = [] ##arreglo para almacenar la fecha
+
+            contneutro = 0
+            contposit = 0
+            contnegat = 0
+            cont = 0
+            ##recorro todas las fechas que tienen resultado
+            for resultfechas in queryfechas:
+
+                ##recorro los resultados agrupados por fecha y por Predicciones
+                for result in query:
+
+                    if resultfechas['date'] == result['date']:
+
+                        if result['prediction'] == "NEUTRO":
+                            ##pickup_dict[0]['data'][contneutro] = result['count_items']
+                            pickup_dict[0]['data'].append(result['count_items'])
+                            contneutro = contneutro + 1
+                        if result['prediction'] == "POSITIVO":
+                            ##pickup_dict[1]['data'][contposit]=result['count_items']
+                            pickup_dict[1]['data'].append(result['count_items'])
+                            contposit = contposit + 1
+                        if result['prediction'] == "NEGATIVO":
+                            ##pickup_dict[2]['data'][contnegat]=result['count_items']
+                            pickup_dict[2]['data'].append(result['count_items'])
+                            contnegat = contnegat + 1
 
 
-        if comercial!="":
-            query= query.filter(user=comercial)
+                if cont==contneutro:
+                    pickup_dict[0]['data'].append(0)
+                    contneutro = contneutro + 1
+                if cont==contposit:
+                    pickup_dict[1]['data'].append(0)
+                    contposit = contposit + 1
+                if cont==contnegat:
+                    pickup_dict[2]['data'].append(0)
+                    contnegat = contnegat + 1
+                cont = cont + 1
 
-        ##if query!="":
-            #query = list(query)
-            ###query = serializers.serialize('json', query)
+                fechas.append(resultfechas['date'])
 
 
-        print("llego aquiiiiiiii")
-        print(query)
-
-        content = {'calls': query, 'success': 1}
+        content = {'calls': pickup_dict,'fechas':fechas, 'success': 1}
 
         return Response(content)
 
@@ -166,52 +223,51 @@ def getAllSentim(request):
         return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
 
 
-
 def convert_voice_to_text(f):
-   # try:
-        print('convirtiendo audio')
-        # Instantiates a client
-        audio = f.name[:-4] + ".flac"
-        file_name = "/home/ciudatos/uploads/audios/" + audio
+    # try:
+    print('convirtiendo audio')
+    # Instantiates a client
+    audio = f.name[:-4] + ".flac"
+    file_name = "/home/ciudatos/uploads/audios/" + audio
 
-        client = speech.SpeechClient()
+    client = speech.SpeechClient()
 
-        # The name of the audio file to transcribe
-        file_name = file_name
+    # The name of the audio file to transcribe
+    file_name = file_name
 
-        print(file_name)
-        # Loads the audio into memory
-        with io.open(file_name, 'rb') as audio_file:
-            content = audio_file.read()
+    print(file_name)
+    # Loads the audio into memory
+    with io.open(file_name, 'rb') as audio_file:
+        content = audio_file.read()
 
-        audio = types.RecognitionAudio(content=content)
-        config = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
-            #sample_rate_hertz=8000,
-            language_code='es-ES')
+    audio = types.RecognitionAudio(content=content)
+    config = types.RecognitionConfig(
+        encoding=enums.RecognitionConfig.AudioEncoding.FLAC,
+        # sample_rate_hertz=8000,
+        language_code='es-ES')
 
-        # Detects speech in the audio file
-        response = client.recognize(config, audio)
+    # Detects speech in the audio file
+    response = client.recognize(config, audio)
 
-        print(response.results)
-        text = ""
+    print(response.results)
+    text = ""
+
+    print(response.results)
+    for result in response.results:
+        print('Transcript: {}'.format(result.alternatives[0].transcript))
+        text = text + format(result.alternatives[0].transcript)
+
+    print(text)
+    return text
 
 
-        print(response.results)
-        for result in response.results:
-            print('Transcript: {}'.format(result.alternatives[0].transcript))
-            text = text + format(result.alternatives[0].transcript)
-
-
-        print(text)
-        return text
-    #except Exception:
-    #    print ("error convirtiendo")
-    #    return ""
+# except Exception:
+#    print ("error convirtiendo")
+#    return ""
 
 
 def handle_uploaded_file(f):
-    #file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
+    # file_number es el numero del audio, ejemplo, si file_number es 1 buscar en el campo audio1
     file_path = "/home/ciudatos/uploads/audios/"
     with open(file_path + f.name, 'wb+') as destination:
         for chunk in f.chunks():
@@ -222,7 +278,6 @@ def handle_uploaded_file(f):
             convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
-
 # convert mp3 to flac if the flac target file does not already exist
 def convert_mp3(mp3):
     # for mp3 in mp3_list:
@@ -230,7 +285,5 @@ def convert_mp3(mp3):
     if os.path.isfile(flac):
         print('File ' + flac + ' already exists')
     else:
-        #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
-        call('ffmpeg -i '+mp3+' -ac 1 ' + str(flac), shell=True)
-
-
+        # call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)

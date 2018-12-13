@@ -321,3 +321,96 @@ def convert_mp3(mp3):
     else:
        # call(["ffmpeg", "-i", mp3, flac])
        call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)
+
+
+##este metodo retorna los datos de la llamada por un rango de fecha y por comercial
+@api_view(['GET'])
+def getAllSentim(request):
+    try:
+        comercial = request.data.get('comercial', '')
+        desde = request.data.get('desde', '')
+        hasta = request.data.get('hasta', '')
+
+        query = Experience.objects.all().values()
+        if desde != "":
+            ##query= Calls.objects.annotate(calldate__gte=desde)
+            query = query.filter(expedate__gte=desde)
+
+        if hasta != "":
+            query = query.filter(expedate__lt=hasta)
+
+        if comercial != "":
+            query = query.filter(user=comercial)
+
+        if query != "":
+            # query = list(query)
+            ###query = serializers.serialize('json', query)
+            queryfechas = query.extra(select={'date': "DATE(expedate)"}). \
+                values('date'). \
+                annotate(count_items=Count('expedate')) \
+                .order_by('date')
+
+            query = query.extra(select={'date': "DATE(expedate)"}). \
+                values('date', 'prediction'). \
+                annotate(count_items=Count('expedate')) \
+                .order_by('date')
+
+            pickup_dict = []
+            record = {"name": "NEUTRO", "data": []}
+            pickup_dict.append(record)
+
+            record = {"name": "POSITIVO", "data": []}
+            pickup_dict.append(record)
+
+            record = {"name": "negativo", "data": []}
+            pickup_dict.append(record)
+
+            fechas = [] ##arreglo para almacenar la fecha
+
+            contneutro = 0
+            contposit = 0
+            contnegat = 0
+            cont = 0
+            ##recorro todas las fechas que tienen resultado
+            for resultfechas in queryfechas:
+
+                ##recorro los resultados agrupados por fecha y por Predicciones
+                for result in query:
+
+                    if resultfechas['date'] == result['date']:
+
+                        if result['prediction'] == "NEUTRO":
+                            ##pickup_dict[0]['data'][contneutro] = result['count_items']
+                            pickup_dict[0]['data'].append(result['count_items'])
+                            contneutro = contneutro + 1
+                        if result['prediction'] == "POSITIVO":
+                            ##pickup_dict[1]['data'][contposit]=result['count_items']
+                            pickup_dict[1]['data'].append(result['count_items'])
+                            contposit = contposit + 1
+                        if result['prediction'] == "NEGATIVO":
+                            ##pickup_dict[2]['data'][contnegat]=result['count_items']
+                            pickup_dict[2]['data'].append(result['count_items'])
+                            contnegat = contnegat + 1
+
+
+                if cont==contneutro:
+                    pickup_dict[0]['data'].append(0)
+                    contneutro = contneutro + 1
+                if cont==contposit:
+                    pickup_dict[1]['data'].append(0)
+                    contposit = contposit + 1
+                if cont==contnegat:
+                    pickup_dict[2]['data'].append(0)
+                    contnegat = contnegat + 1
+                cont = cont + 1
+
+                fechas.append(resultfechas['date'])
+
+
+        content = {'experiences': pickup_dict,'fechas':fechas, 'success': 1}
+
+        return Response(content)
+
+    except ValueError as e:
+
+        return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
