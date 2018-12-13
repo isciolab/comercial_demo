@@ -31,22 +31,11 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 
-from django.core.exceptions import ObjectDoesNotExist
-
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
-import requests
-import os.path  ##libreria que verifica si los archivos existen
-import datetime
-
-from django.db.models import Count
-
-rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
-##rutadropbox="/root/Dropbox/demo/input"
-##rutainputdropbox="/root/Dropbox/demo/input"
-rutaouputdropbox = "/root/Dropbox/demo/ouput"
-rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
-
+import os.path ##libreria que verifica si los archivos existen
+rutainputdropbox="/home/ciudatos/pythonapp/input/"
+rutaouputdropbox="./ouput/"
 
 # Create your views here.
 
@@ -278,6 +267,7 @@ def handle_uploaded_file(f):
             convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
+
 # convert mp3 to flac if the flac target file does not already exist
 def convert_mp3(mp3):
     # for mp3 in mp3_list:
@@ -285,5 +275,8 @@ def convert_mp3(mp3):
     if os.path.isfile(flac):
         print('File ' + flac + ' already exists')
     else:
-        # call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
-        call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)
+        #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        call('ffmpeg -i '+mp3+' -qscale 0 -ac 1 ' + str(flac), shell=True)
+        #call('ffmpeg -i '+mp3+' -filter_complex channelsplit=channel_layout=stereo ' + str(flac), shell=True)
+
+
