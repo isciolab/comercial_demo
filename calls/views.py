@@ -1,3 +1,4 @@
+import sys
 from subprocess import call
 
 from django.core.files.storage import default_storage
@@ -20,7 +21,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
-from rest_framework import serializers
+##from rest_framework import serializers
 from django.conf import settings
 
 from .serializers import CallsSerializer
@@ -30,9 +31,16 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 
+from django.core.exceptions import ObjectDoesNotExist
+
+
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
+import requests
 import os.path ##libreria que verifica si los archivos existen
+import datetime
+
+from django.db.models import Count
 
 rutainputdropbox="C:/Users/fernando/Dropbox/demo/input"
 ##rutadropbox="/root/Dropbox/demo/input"
@@ -50,7 +58,7 @@ def getCalls(request):
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
 
-    except calls.DoesNotExist:
+    except ObjectDoesNotExist:
         calls = None
 
     content = {'calls':calls,  'success': 1}
@@ -101,26 +109,61 @@ def readfileouput(request):
     data = ""
     content = {'success': 1}
     ##busco los archivos den la ruta del dropbox
-    files = os.listdir(rutainputdropbox)
+    files = os.listdir(rutaouputdropbox)
     print(files)
     if len(files) > 0:
         for file in files:
             ##si empiezan con "c" es que son los calls
             if file[:1] == "c":
-                with open(rutainputdropbox + '/' + file) as f:
+                with open(rutaouputdropbox + '/' + file) as f:
                     ##aqui obtengo el archivo
                     data = json.load(f)
-                    print(data)
-                    print(data['id'])
-                    print("lega aqui")
-                    llamada = Calls.objects.get(id=data['id'])
-                    print("lega aquaaaaaaaaaaaaaaaai")
-                    print(llamada)
+
+                    ##busco el registro de la llamada, y le actualizo la prediccion
+                    call = Calls.objects.get(id=data[0]['id'])
+                    call.prediction = data[0]['pred']
+                    call.save()
 
     else:
         content['success'] = 0
     return Response(content)
 
+##este metodo retorna los datos de la llamada por un rango de fecha y por comercial
+@api_view(['GET'])
+def getAllSentim(request):
+    try:
+        comercial = request.data.get('comercial','')
+        desde = request.data.get('desde','')
+        hasta = request.data.get('hasta','')
+
+        query = Calls.objects.all().values()
+        if desde!="":
+            ##query= Calls.objects.annotate(calldate__gte=desde)
+            query=query.filter(calldate__range=[desde,hasta]).extra(select={'date': "DATE(calldate)"}). \
+                values('date','prediction'). \
+                annotate(count_items=Count('calldate'))\
+                .order_by('date')
+
+
+
+        if comercial!="":
+            query= query.filter(user=comercial)
+
+        ##if query!="":
+            #query = list(query)
+            ###query = serializers.serialize('json', query)
+
+
+        print("llego aquiiiiiiii")
+        print(query)
+
+        content = {'calls': query, 'success': 1}
+
+        return Response(content)
+
+    except ValueError as e:
+
+        return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
 
 
 

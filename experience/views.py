@@ -46,6 +46,7 @@ rutainputdropbox="C:/Users/fernando/Dropbox/demo/input"
 ##rutadropbox="/root/Dropbox/demo/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
 rutaouputdropbox="/root/Dropbox/demo/ouput"
+rutaouputdropbox="C:/Users/fernando/Dropbox/demo/ouput"
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
 @api_view(['GET'])
 
@@ -101,18 +102,21 @@ def cnvertirfecha(o):
 def readfileouput(request):
     data=""
     content = {'success': 1}
-    ruta=rutainputdropbox
     ##busco los archivos den la ruta del dropbox
-    files = os.listdir(rutainputdropbox)
+    files = os.listdir(rutaouputdropbox)
     print(files)
     if len(files)>0:
         for file in files:
-            ##si empiezan con "c" es que son los calls
-            if file[:1]=="c":
-                with open(rutainputdropbox + '/'+file) as f:
+            ##si empiezan con "e" es que son las experiencias
+            if file[:1]=="e":
+                with open(rutaouputdropbox + '/'+file) as f:
                     ##aqui obtengo el archivo
                     data = json.load(f)
-                    print(data['id'])
+
+                    ##busco el registro de la llamada, y le actualizo la prediccion
+                    experiencia = Experience.objects.get(id=data[0]['id'])
+                    experiencia.prediction = data[0]['pred']
+                    experiencia.save()
 
     else:
         content['success']=0
@@ -171,6 +175,7 @@ def RegisterExperience(request):
         audio2 = request.data.get('audio2')
         uploaded_file = request.FILES.get('uploaded_file', '')
         uploaded_file2 = request.FILES.get('uploaded_file2', '')
+        expedate=request.data.get('fecha')
 
         # print(request.FILES)
         # print(uploaded_file.size)
@@ -188,7 +193,7 @@ def RegisterExperience(request):
             audio2 = audio2[:-4] + ".flac"
 
         experience = Experience(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1,
-                                audio2=audio2,
+                                audio2=audio2,expedate=expedate,
                                 flag_converted=0, conversion_audio1=text1, conversion_audio2=text2)
         experience.save()
 

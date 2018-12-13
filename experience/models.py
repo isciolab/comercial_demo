@@ -18,12 +18,12 @@ class Experience(models.Model):
     conversion_audio2 = models.TextField()
     flag_converted = models.BooleanField()
     expedate = models.DateTimeField(default=datetime.now(), blank=True)
-    prediction = models.DateTimeField(null=True)
+    prediction = models.TextField(null=True)
 
     @classmethod
     def create(cls, user, cliente, lugar, pediste_info, audio1, audio2, conversion_audio1, conversion_audio2):
         experience = cls(user=user, cliente=cliente, lugar=lugar, pediste_info=pediste_info, audio1=audio1, audio2=audio2,
-                         conversion_audio1=conversion_audio1, conversion_audio2=conversion_audio2)
+                         conversion_audio1=conversion_audio1, conversion_audio2=conversion_audio2,prediction=prediction)
         # do something with the book
         return experience
 
