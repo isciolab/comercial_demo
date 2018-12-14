@@ -62,10 +62,11 @@ def getexpandcalls(request):
         calls = list(calls)  # important: convert the QuerySet to a list object
 
         for attr in calls:
-            print("se imrpimiooooooooooooooooo")
+
             print(attr['id'])
             with open(rutainputdropbox + '/calls' + str(attr['id']) + '.json', 'w') as outfile:
                 json.dump(attr, outfile, default=cnvertirfecha)
+                print("se imrpimiooooooooooooooooo")
 
 
 
