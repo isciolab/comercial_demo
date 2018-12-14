@@ -23,6 +23,7 @@ from rest_framework.renderers import JSONRenderer
 from django.core import serializers
 ##from rest_framework import serializers
 from django.conf import settings
+from django.db.models import Count ##para poder hacer el group by
 
 from .serializers import CallsSerializer
 from .models import Calls
@@ -33,9 +34,11 @@ from google.cloud.speech import types
 
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
-import os.path ##libreria que verifica si los archivos existen
-rutainputdropbox="/home/ciudatos/pythonapp/input/"
-rutaouputdropbox="./ouput/"
+import os.path  ##libreria que verifica si los archivos existen
+
+rutainputdropbox = "/home/ciudatos/pythonapp/input/"
+rutaouputdropbox = "./ouput/"
+
 
 # Create your views here.
 
@@ -53,6 +56,11 @@ def getCalls(request):
     content = {'calls': calls, 'success': 1}
     return Response(content)
 
+
+@api_view(['GET'])
+def urlcron(request):
+    content = {'success': 1}
+    return Response(content)
 
 @api_view(["POST"])
 def registerCall(request):
@@ -161,49 +169,49 @@ def getAllSentim(request):
             record = {"name": "negativo", "data": []}
             pickup_dict.append(record)
 
-            fechas = [] ##arreglo para almacenar la fecha
+            fechas = []  ##arreglo para almacenar la fecha
 
             contneutro = 0
             contposit = 0
             contnegat = 0
             cont = 0
             ##recorro todas las fechas que tienen resultado
-            for resultfechas in queryfechas:
+            if len(queryfechas) > 0:
+                for resultfechas in queryfechas:
 
-                ##recorro los resultados agrupados por fecha y por Predicciones
-                for result in query:
+                    ##recorro los resultados agrupados por fecha y por Predicciones
+                    if len(query) > 0:
+                        for result in query:
 
-                    if resultfechas['date'] == result['date']:
+                            if resultfechas['date'] == result['date']:
 
-                        if result['prediction'] == "NEUTRO":
-                            ##pickup_dict[0]['data'][contneutro] = result['count_items']
-                            pickup_dict[0]['data'].append(result['count_items'])
+                                if result['prediction'] == "NEUTRO":
+                                    ##pickup_dict[0]['data'][contneutro] = result['count_items']
+                                    pickup_dict[0]['data'].append(result['count_items'])
+                                    contneutro = contneutro + 1
+                                if result['prediction'] == "POSITIVO":
+                                    ##pickup_dict[1]['data'][contposit]=result['count_items']
+                                    pickup_dict[1]['data'].append(result['count_items'])
+                                    contposit = contposit + 1
+                                if result['prediction'] == "NEGATIVO":
+                                    ##pickup_dict[2]['data'][contnegat]=result['count_items']
+                                    pickup_dict[2]['data'].append(result['count_items'])
+                                    contnegat = contnegat + 1
+
+                        if cont == contneutro:
+                            pickup_dict[0]['data'].append(0)
                             contneutro = contneutro + 1
-                        if result['prediction'] == "POSITIVO":
-                            ##pickup_dict[1]['data'][contposit]=result['count_items']
-                            pickup_dict[1]['data'].append(result['count_items'])
+                        if cont == contposit:
+                            pickup_dict[1]['data'].append(0)
                             contposit = contposit + 1
-                        if result['prediction'] == "NEGATIVO":
-                            ##pickup_dict[2]['data'][contnegat]=result['count_items']
-                            pickup_dict[2]['data'].append(result['count_items'])
+                        if cont == contnegat:
+                            pickup_dict[2]['data'].append(0)
                             contnegat = contnegat + 1
+                        cont = cont + 1
 
+                        fechas.append(resultfechas['date'])
 
-                if cont==contneutro:
-                    pickup_dict[0]['data'].append(0)
-                    contneutro = contneutro + 1
-                if cont==contposit:
-                    pickup_dict[1]['data'].append(0)
-                    contposit = contposit + 1
-                if cont==contnegat:
-                    pickup_dict[2]['data'].append(0)
-                    contnegat = contnegat + 1
-                cont = cont + 1
-
-                fechas.append(resultfechas['date'])
-
-
-        content = {'calls': pickup_dict,'fechas':fechas, 'success': 1}
+        content = {'calls': pickup_dict, 'fechas': fechas, 'success': 1}
 
         return Response(content)
 
@@ -267,7 +275,6 @@ def handle_uploaded_file(f):
             convert_mp3("/home/ciudatos/uploads/audios/" + f.name)
 
 
-
 # convert mp3 to flac if the flac target file does not already exist
 def convert_mp3(mp3):
     # for mp3 in mp3_list:
@@ -275,8 +282,6 @@ def convert_mp3(mp3):
     if os.path.isfile(flac):
         print('File ' + flac + ' already exists')
     else:
-        #call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
-        call('ffmpeg -i '+mp3+' -qscale 0 -ac 1 ' + str(flac), shell=True)
-        #call('ffmpeg -i '+mp3+' -filter_complex channelsplit=channel_layout=stereo ' + str(flac), shell=True)
-
-
+        # call(["ffmpeg", "-i ", mp3, "-ac 1", flac])
+        call('ffmpeg -i ' + mp3 + ' -qscale 0 -ac 1 ' + str(flac), shell=True)
+        # call('ffmpeg -i '+mp3+' -filter_complex channelsplit=channel_layout=stereo ' + str(flac), shell=True)
