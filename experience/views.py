@@ -62,11 +62,9 @@ def getexpandcalls(request):
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
 
-        for attr in calls:
-            print("se imrpimiooooooooooooooooo")
-            print(attr['id'])
-            with open(rutadropbox + '/calls' + str(attr['id']) + '.json', 'w') as outfile:
-                json.dump(attr, outfile, default=cnvertirfecha)
+
+        with open(rutadropbox + '/calls.json', 'w') as outfile:
+            json.dump(attr, outfile)
 
 
 
