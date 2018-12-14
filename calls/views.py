@@ -36,8 +36,8 @@ parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import os.path  ##libreria que verifica si los archivos existen
 
-rutainputdropbox = "/home/ciudatos/pythonapp/input/"
-rutaouputdropbox = "./ouput/"
+rutainputdropbox = "/root/dropbox/demo/input/"
+rutaouputdropbox = "/root/dropbox/demo/ouput"
 
 
 # Create your views here.
