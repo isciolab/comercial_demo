@@ -23,7 +23,7 @@ from rest_framework.renderers import JSONRenderer
 from django.core import serializers
 ##from rest_framework import serializers
 from django.conf import settings
-from django.db.models import Count ##para poder hacer el group by
+from django.db.models import Count, Avg, Sum  ##para poder hacer el group by
 
 from .serializers import CallsSerializer
 from .models import Calls
@@ -61,6 +61,7 @@ def getCalls(request):
 def urlcron(request):
     content = {'success': 1}
     return Response(content)
+
 
 @api_view(["POST"])
 def registerCall(request):
@@ -125,6 +126,28 @@ def readfileouput(request):
     else:
         content['success'] = 0
     return Response(content)
+
+
+# retorna el promedio de las llamadas por comercial
+@api_view(['GET'])
+def promediocall(request):
+    try:
+
+        query =Calls.objects.all().values()
+        query=query.values('user').annotate(Avg("duration_call")).order_by('user')
+        pickup_records = []
+
+        for row in query:
+
+            record = [row['user'],row['duration_call__avg']]
+            pickup_records.append(record)
+
+        content = {'calls': pickup_records,  'success': 1}
+
+        return Response(content)
+    except ValueError as e:
+
+        return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
 
 
 ##este metodo retorna los datos de la llamada por un rango de fecha y por comercial

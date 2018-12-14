@@ -41,6 +41,7 @@ import json  ##para retornar data en json
 import requests
 import os.path  ##libreria que verifica si los archivos existen
 import datetime
+from django.db.models import Count  ##para poder hacer el group by
 
 rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
@@ -321,6 +322,8 @@ def convert_mp3(mp3):
     else:
         # call(["ffmpeg", "-i", mp3, flac])
         call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)
+
+
 
 
 ##este metodo retorna los datos de la llamada por un rango de fecha y por comercial

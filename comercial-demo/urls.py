@@ -21,7 +21,8 @@ urlpatterns = [
     url(r'^calls/getCalls', calls_views.getCalls),
     url(r'^calls/registerCall', calls_views.registerCall),
     url(r'^calls/getAllSentim', calls_views.getAllSentim),
-    url(r'^experience/getAllSentim', experience_views.getAllSentim)
+    url(r'^experience/getAllSentim', experience_views.getAllSentim),
+    url(r'^calls/promediocall', calls_views.promediocall)
 
 
 
