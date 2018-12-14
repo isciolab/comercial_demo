@@ -35,7 +35,6 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from pprint import PrettyPrinter
-from django.db.models import Count ##para poder hacer el group by
 
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json  ##para retornar data en json
@@ -44,10 +43,10 @@ import os.path  ##libreria que verifica si los archivos existen
 import datetime
 
 rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
-##rutadropbox="/root/Dropbox/demo/input"
+rutadropbox="/root/Dropbox/demo/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
 rutaouputdropbox = "/root/Dropbox/demo/ouput"
-rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
+##rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
 
 
 ##el siguiente metodo retornara toda la data de experiencias y calls en formato json
@@ -62,9 +61,11 @@ def getexpandcalls(request):
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
 
-
-        with open(rutadropbox + '/calls.json', 'w') as outfile:
-            json.dump(attr, outfile)
+        for attr in calls:
+            print("se imrpimiooooooooooooooooo")
+            print(attr['id'])
+            with open(rutainputdropbox + '/calls' + str(attr['id']) + '.json', 'w') as outfile:
+                json.dump(attr, outfile, default=cnvertirfecha)
 
 
 
@@ -73,10 +74,10 @@ def getexpandcalls(request):
         calls = None
         experiences = None
 
-    print(os.path.isdir(rutadropbox))
+    print(os.path.isdir(rutainputdropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
     try:
-        with open(rutadropbox + '/data.json', 'w') as outfile:
+        with open(rutainputdropbox + '/data.json', 'w') as outfile:
             json.dump(content, outfile, default=cnvertirfecha)
 
     except ValueError as e:
