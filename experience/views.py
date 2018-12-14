@@ -43,7 +43,7 @@ import os.path  ##libreria que verifica si los archivos existen
 import datetime
 
 rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
-rutadropbox="/root/Dropbox/demo/input"
+rutainputdropbox="/root/Dropbox/demo/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
 rutaouputdropbox = "/root/Dropbox/demo/ouput"
 ##rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
