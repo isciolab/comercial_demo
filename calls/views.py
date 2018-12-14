@@ -151,7 +151,7 @@ def promediocall(request):
 
 
 ##este metodo retorna los datos de la llamada por un rango de fecha y por comercial
-@api_view(['GET'])
+@api_view(['POST'])
 def getAllSentim(request):
     try:
         comercial = request.data.get('comercial', '')
