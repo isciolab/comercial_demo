@@ -137,11 +137,17 @@ def readfileouput(request):
                     print(data)
                     print(data[0])
                     print(data[0]['id'])
-                    ##busco el registro de la llamada, y le actualizo la prediccion
-                    call = Calls.objects.get(id=data[0]['id'])
+                    call=''
+                    try:
+                        ##busco el registro de la llamada
+                        thepost = Calls.objects.get(id=data[0]['id'])
+                    except Calls.DoesNotExist:
+                        call = None
+
+
                     print(call)
-                    print(len(call))
-                    if len(call)>0:
+                    #le actualizo la prediccion
+                    if call!=None:
                         print("paso")
                         call.prediction = data[0]['pred']
                         call.save()
