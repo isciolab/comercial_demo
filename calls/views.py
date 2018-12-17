@@ -142,7 +142,7 @@ def readfileouput(request):
                         ##busco el registro de la llamada
                         thepost = Calls.objects.get(id=data[0]['id'])
                     except Calls.DoesNotExist:
-                        call = None
+                        call = ""
 
 
                     print(call)
