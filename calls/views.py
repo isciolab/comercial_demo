@@ -90,7 +90,10 @@ def registerCall(request):
         uploaded_file = request.FILES.get('uploaded_file', '')
 
         text1 = ""
-        
+        if uploaded_file:
+            handle_uploaded_file(uploaded_file)
+            text1 = convert_voice_to_text(uploaded_file)
+            audio1 = audio1[:-4] + ".flac"
 
         call = Calls(user=user, addressee=addressee, location=location, duration_call=duration_call,
                      origin_number=origin_number,
