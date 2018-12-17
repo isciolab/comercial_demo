@@ -57,7 +57,7 @@ def getCalls(request):
                 , port=222
                 , cnopts=cnopts
                     ) as sftp:
-            filelist = sftp.listdir('/uploads/input')
+            filelist = sftp.listdir('/input')
             print(filelist)
             #dirlist = sftp.listdir(remotepath=full_path)
 
