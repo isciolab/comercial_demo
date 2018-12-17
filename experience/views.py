@@ -118,7 +118,7 @@ def readfileouput(request):
                     experience = ''
                     try:
                         ##busco el registro de la llamada
-                        experience = Calls.objects.get(id=data[0]['id'])
+                        experience = Experience.objects.get(id=data[0]['id'])
                     except Calls.DoesNotExist:
                         experience = ""
 
