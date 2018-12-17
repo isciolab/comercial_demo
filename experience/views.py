@@ -115,11 +115,22 @@ def readfileouput(request):
                 with open(rutaouputdropbox + '/' + file) as f:
                     ##aqui obtengo el archivo
                     data = json.load(f)
+                    experience = ''
+                    try:
+                        ##busco el registro de la llamada
+                        experience = Calls.objects.get(id=data[0]['id'])
+                    except Calls.DoesNotExist:
+                        experience = ""
 
-                    ##busco el registro de la llamada, y le actualizo la prediccion
-                    experiencia = Experience.objects.get(id=data[0]['id'])
-                    experiencia.prediction = data[0]['pred']
-                    experiencia.save()
+                    # le actualizo la prediccion
+                    if experience != "":
+                        ##busco el registro de la llamada, y le actualizo la prediccion
+                        experiencia = Experience.objects.get(id=data[0]['id'])
+                        experiencia.prediction =str(data[0]['pred'])
+                        experiencia.save()
+
+                    # elimino el archivo
+                    os.remove(rutaouputdropbox + '/' + file)
 
     else:
         content['success'] = 0
@@ -203,8 +214,15 @@ def RegisterExperience(request):
         content = {'experience': serializer.data, 'success': 1}
 
         ##escribo el archivo en la ruta de dropbox
-        with open(rutainputdropbox + '/experience' + str(serializer.data['id']) + '.json', 'w') as outfile:
-            json.dump(serializer.data, outfile)
+
+        try:
+            print('voy a escribir el archivo experience' + str(serializer.data['id']))
+            if text1 != "":
+                with open(rutainputdropbox + '/experience' + str(serializer.data['id']) + '.json', 'w') as outfile:
+                    json.dump(serializer.data, outfile)
+
+        except Exception:
+            print ("No se subio el archivo")
 
         return Response(content)
 

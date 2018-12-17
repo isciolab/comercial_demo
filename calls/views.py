@@ -110,7 +110,7 @@ def registerCall(request):
                     json.dump(serializer.data, outfile)
 
         except Exception:
-            print ("No se subio ela rchivo")
+            print ("No se subio el archivo")
         return Response(content)
 
     except ValueError as e:
