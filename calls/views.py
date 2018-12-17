@@ -56,16 +56,15 @@ def getCalls(request):
                 , password='5DyfKTFFc3dbksv'
                 , port=222
                 , cnopts=cnopts
-                    ) as sftp:
+                        ) as sftp:
             filelist = sftp.listdir('/input')
             print(filelist)
-            #dirlist = sftp.listdir(remotepath=full_path)
+            # dirlist = sftp.listdir(remotepath=full_path)
 
 
 
     except ObjectDoesNotExist:
         calls = None
-
 
     content = {'calls': calls, 'success': 1}
     return Response(content)
@@ -105,10 +104,11 @@ def registerCall(request):
 
         ##escribo el archivo en la ruta de dropbox
         try:
-            print('voy a escribir el archivo calls' + str(serializer.data['id'] ))
-            with open(rutainputdropbox + '/calls' + str(serializer.data['id']) + '.json', 'w') as outfile:
-                print('entro')
-                json.dump(serializer.data, outfile)
+            print('voy a escribir el archivo calls' + str(serializer.data['id']))
+            if text1 != "":
+                with open(rutainputdropbox + '/calls' + str(serializer.data['id']) + '.json', 'w') as outfile:
+                    json.dump(serializer.data, outfile)
+
         except Exception:
             print ("No se subio ela rchivo")
         return Response(content)
@@ -133,15 +133,15 @@ def readfileouput(request):
                 with open(rutaouputdropbox + '/' + file) as f:
                     ##aqui obtengo el archivo
                     data = json.load(f)
-                    call=''
+                    call = ''
                     try:
                         ##busco el registro de la llamada
                         call = Calls.objects.get(id=data[0]['id'])
                     except Calls.DoesNotExist:
                         call = ""
 
-                    #le actualizo la prediccion
-                    if call!="":
+                    # le actualizo la prediccion
+                    if call != "":
                         call.prediction = str(data[0]['pred'])
                         call.save()
 
