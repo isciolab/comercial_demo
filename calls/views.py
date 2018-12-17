@@ -149,7 +149,7 @@ def readfileouput(request):
                     #le actualizo la prediccion
                     if call!=None:
                         print("paso")
-                        call.prediction = data[0]['pred']
+                        call.prediction = str(data[0]['pred'])
                         call.save()
 
                         # elimino el archivo
