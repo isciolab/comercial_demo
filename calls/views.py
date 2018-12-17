@@ -139,7 +139,10 @@ def readfileouput(request):
                     print(data[0]['id'])
                     ##busco el registro de la llamada, y le actualizo la prediccion
                     call = Calls.objects.get(id=data[0]['id'])
+                    print(call)
+                    print(len(call))
                     if len(call)>0:
+                        print("paso")
                         call.prediction = data[0]['pred']
                         call.save()
 
