@@ -20,8 +20,8 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.renderers import JSONRenderer
-from django.core import serializers
-##from rest_framework import serializers
+##from django.core import serializers
+from rest_framework import serializers
 from django.conf import settings
 from django.db.models import Count, Avg, Sum  ##para poder hacer el group by
 
