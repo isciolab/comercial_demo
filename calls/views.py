@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
-from rest_framework import serializers
+##from rest_framework import serializers
 from django.conf import settings
 from django.db.models import Count, Avg, Sum  ##para poder hacer el group by
 
@@ -136,6 +136,9 @@ def readfileouput(request):
                     call = Calls.objects.get(id=data[0]['id'])
                     call.prediction = data[0]['pred']
                     call.save()
+
+                    #elimino el archivo
+                    os.remove(rutaouputdropbox + '/' + file)
 
     else:
         content['success'] = 0
