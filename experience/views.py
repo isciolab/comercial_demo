@@ -44,9 +44,9 @@ import datetime
 from django.db.models import Count  ##para poder hacer el group by
 
 rutainputdropbox = "C:/Users/fernando/Dropbox/demo/input"
+rutainputdropbox="/home/jsonfiles/input"
 ##rutainputdropbox="/root/Dropbox/demo/input"
-##rutainputdropbox="/root/Dropbox/demo/input"
-rutaouputdropbox = "/root/Dropbox/demo/ouput"
+rutaouputdropbox = "/home/jsonfiles/ouput"
 ##rutaouputdropbox = "C:/Users/fernando/Dropbox/demo/ouput"
 
 
