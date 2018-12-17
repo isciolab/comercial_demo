@@ -193,7 +193,7 @@ def RegisterExperience(request):
         # print(request.FILES)
         # print(uploaded_file.size)
         # print(audio1)
-        text1 = "Hola esto es una prueba de llamada"
+        text1 = ""
         text2 = ""
         if uploaded_file:
             handle_uploaded_file(uploaded_file)
