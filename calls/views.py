@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework.renderers import JSONRenderer
 from django.core import serializers
-##from rest_framework import serializers
+from rest_framework import serializers
 from django.conf import settings
 from django.db.models import Count, Avg, Sum  ##para poder hacer el group by
 
@@ -35,9 +35,10 @@ from google.cloud.speech import types
 parser_classes = (FileUploadParser, MultiPartParser, JSONParser,)
 import json
 import os.path  ##libreria que verifica si los archivos existen
+from pysftp import Connection, CnOpts
 
-rutainputdropbox = "/root/Dropbox/demo/input/"
-rutaouputdropbox = "/root/Dropbox/demo/ouput"
+rutainputdropbox = "/home/jsonfiles/input"
+rutaouputdropbox = "/home/jsonfiles/ouput"
 
 
 # Create your views here.
@@ -47,11 +48,24 @@ rutaouputdropbox = "/root/Dropbox/demo/ouput"
 def getCalls(request):
     calls = ''
     try:
-        calls = Calls.objects.all().values()  # or simply .values() to get all fields
-        calls = list(calls)  # important: convert the QuerySet to a list object
+
+        cnopts = CnOpts()
+        cnopts.hostkeys = None
+        with Connection('88.208.3.175'
+                , username='jsonfiles'
+                , password='5DyfKTFFc3dbksv'
+                , port=222
+                , cnopts=cnopts
+                    ) as sftp:
+            filelist = sftp.listdir('/uploads/input')
+            print(filelist)
+            #dirlist = sftp.listdir(remotepath=full_path)
+
+
 
     except ObjectDoesNotExist:
         calls = None
+
 
     content = {'calls': calls, 'success': 1}
     return Response(content)
@@ -133,16 +147,15 @@ def readfileouput(request):
 def promediocall(request):
     try:
 
-        query =Calls.objects.all().values()
-        query=query.values('user').annotate(Avg("duration_call")).order_by('user')
+        query = Calls.objects.all().values()
+        query = query.values('user').annotate(Avg("duration_call")).order_by('user')
         pickup_records = []
 
         for row in query:
-
-            record = [row['user'],row['duration_call__avg']]
+            record = [row['user'], row['duration_call__avg']]
             pickup_records.append(record)
 
-        content = {'calls': pickup_records,  'success': 1}
+        content = {'calls': pickup_records, 'success': 1}
 
         return Response(content)
     except ValueError as e:
