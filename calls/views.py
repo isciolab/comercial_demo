@@ -133,29 +133,21 @@ def readfileouput(request):
                 with open(rutaouputdropbox + '/' + file) as f:
                     ##aqui obtengo el archivo
                     data = json.load(f)
-
-                    print(data)
-                    print(data[0])
-                    print(data[0]['id'])
                     call=''
                     try:
                         ##busco el registro de la llamada
-                        thepost = Calls.objects.get(id=data[0]['id'])
+                        call = Calls.objects.get(id=data[0]['id'])
                     except Calls.DoesNotExist:
                         call = ""
 
-
-                    print(call)
                     #le actualizo la prediccion
                     if call!="":
-                        print("paso")
                         call.prediction = str(data[0]['pred'])
                         call.save()
 
-                        # elimino el archivo
-                        os.remove(rutaouputdropbox + '/' + file)
-                    else:
-                        os.remove(rutaouputdropbox + '/' + file)
+                    # elimino el archivo
+                    os.remove(rutaouputdropbox + '/' + file)
+
 
 
     else:
