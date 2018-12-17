@@ -37,8 +37,8 @@ import json
 import os.path  ##libreria que verifica si los archivos existen
 from pysftp import Connection, CnOpts
 
-rutainputdropbox = "/home/jsonfiles/input"
-rutaouputdropbox = "/home/jsonfiles/ouput"
+rutainputdropbox = "/home/jsonfiles/uploads/input"
+rutaouputdropbox = "/home/jsonfiles/uploads/ouput"
 
 
 # Create your views here.
