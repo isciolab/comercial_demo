@@ -105,7 +105,7 @@ def registerCall(request):
 
         ##escribo el archivo en la ruta de dropbox
         try:
-            print('voy a escribir el archivo')
+            print('voy a escribir el archivo calls' + str(serializer.data['id'] ))
             with open(rutainputdropbox + '/calls' + str(serializer.data['id']) + '.json', 'w') as outfile:
                 print('entro')
                 json.dump(serializer.data, outfile)
