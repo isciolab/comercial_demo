@@ -135,6 +135,8 @@ def readfileouput(request):
                     data = json.load(f)
 
                     print(data)
+                    print(data[0])
+                    print(data[0]['id'])
                     ##busco el registro de la llamada, y le actualizo la prediccion
                     call = Calls.objects.get(id=data[0]['id'])
                     if len(call)>0:
