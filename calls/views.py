@@ -136,11 +136,13 @@ def readfileouput(request):
 
                     ##busco el registro de la llamada, y le actualizo la prediccion
                     call = Calls.objects.get(id=data[0]['id'])
-                    call.prediction = data[0]['pred']
-                    call.save()
+                    if len(call)>0:
+                        call.prediction = data[0]['pred']
+                        call.save()
 
-                    #elimino el archivo
-                    os.remove(rutaouputdropbox + '/' + file)
+                        # elimino el archivo
+                        os.remove(rutaouputdropbox + '/' + file)
+
 
     else:
         content['success'] = 0
