@@ -147,12 +147,14 @@ def readfileouput(request):
 
                     print(call)
                     #le actualizo la prediccion
-                    if call!=None:
+                    if call!="":
                         print("paso")
                         call.prediction = str(data[0]['pred'])
                         call.save()
 
                         # elimino el archivo
+                        os.remove(rutaouputdropbox + '/' + file)
+                    else:
                         os.remove(rutaouputdropbox + '/' + file)
 
 
