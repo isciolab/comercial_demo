@@ -19,6 +19,11 @@ urlpatterns = [
     url(r'^calls/readfileouput', calls_views.readfileouput),
     url(r'^custom_login', experience_views.custom_login),
     url(r'^calls/getCalls', calls_views.getCalls),
-    url(r'^calls/registerCall', calls_views.registerCall)
+    url(r'^calls/registerCall', calls_views.registerCall),
+    url(r'^calls/getAllSentim', calls_views.getAllSentim),
+    url(r'^experience/getAllSentim', experience_views.getAllSentim),
+    url(r'^calls/promediocall', calls_views.promediocall)
+
+
 
 ]

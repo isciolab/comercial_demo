@@ -21,6 +21,13 @@ pip install matplotlib
 ##
 pip install wordcloud
 
+## Lo de abajo es importante para poder correr migraciones de forma mahual
+    pip install sqlparse
+
+## Lo de abajo es para poder hacer conexiones ftp 
+    pip install pysftp
+
+
 
 ##si aparece el siguiente error al ejecutar: pip install mysql-python connector
  mysql-python install error: Cannot open include file 'config-win.h'
