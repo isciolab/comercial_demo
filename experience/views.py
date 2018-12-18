@@ -339,9 +339,8 @@ def convert_mp3(mp3):
         print('File ' + flac + ' already exists')
     else:
         # call(["ffmpeg", "-i", mp3, flac])
-        call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)
-
-
+        #call('ffmpeg -i ' + mp3 + ' -ac 1 ' + str(flac), shell=True)
+        call('ffmpeg -i ' + mp3 + ' -qscale 0 -ac 1 ' + str(flac), shell=True)
 
 
 ##este metodo retorna los datos de la llamada por un rango de fecha y por comercial
