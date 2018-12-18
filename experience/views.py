@@ -178,7 +178,7 @@ def getDataByCecula(request):
 
 @api_view(["POST"])
 def RegisterExperience(request):
-    try:
+    
 
         user = request.data.get('user', '')
         cliente = request.data.get('cliente')
@@ -226,9 +226,7 @@ def RegisterExperience(request):
 
         return Response(content)
 
-    except ValueError as e:
 
-        return Response(e.args[0], status.HTTP_400_BAD_REQUEST)
 
 
 def convert_voice_to_text(f):
