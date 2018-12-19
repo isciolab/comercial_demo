@@ -62,10 +62,10 @@ def getexpandcalls(request):
         calls = Calls.objects.all().values()  # or simply .values() to get all fields
         calls = list(calls)  # important: convert the QuerySet to a list object
 
-        for attr in calls:
+        for attr in experiences:
 
             print(attr['id'])
-            with open(rutainputdropbox + '/calls' + str(attr['id']) + '.json', 'w') as outfile:
+            with open(rutainputdropbox + '/experience' + str(attr['id']) + '.json', 'w') as outfile:
                 json.dump(attr, outfile, default=cnvertirfecha)
                 print("se imrpimiooooooooooooooooo")
 
@@ -78,13 +78,7 @@ def getexpandcalls(request):
 
     print(os.path.isdir(rutainputdropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
-    try:
-        with open(rutainputdropbox + '/data.json', 'w') as outfile:
-            json.dump(content, outfile, default=cnvertirfecha)
-
-    except ValueError as e:
-        print ("No se subio el archivo call.json")
-        print(e.args[0])
+    
     return Response(content)
 
 
