@@ -78,7 +78,7 @@ def getexpandcalls(request):
 
     print(os.path.isdir(rutainputdropbox))
     content = {'experiences': experiences, 'calls': calls, 'success': 1}
-    
+
     return Response(content)
 
 
