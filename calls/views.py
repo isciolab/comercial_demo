@@ -215,7 +215,7 @@ def getAllSentim(request):
             record = {"name": "POSITIVO", "data": []}
             pickup_dict.append(record)
 
-            record = {"name": "negativo", "data": []}
+            record = {"name": "NEGATIVO", "data": []}
             pickup_dict.append(record)
 
             fechas = []  ##arreglo para almacenar la fecha

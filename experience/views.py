@@ -178,7 +178,7 @@ def getDataByCecula(request):
 
 @api_view(["POST"])
 def RegisterExperience(request):
-    
+
 
         user = request.data.get('user', '')
         cliente = request.data.get('cliente')
